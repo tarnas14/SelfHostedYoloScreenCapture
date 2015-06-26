@@ -6,46 +6,45 @@ namespace SelfHostedYoloScreenCapture
 
     public class SelectionDrawer
     {
-        private readonly PictureBox _overlayBox;
-        private readonly Color _transparencyKey;
-        private bool _choosingRectangle;
+        private bool _selecting;
         private Point _startLocation;
+        private readonly SolidBrush _selectionBrush;
+        private readonly SelectionCanvas _selectionCanvas;
 
         public Rectangle Selection { get; private set; }
 
-        public SelectionDrawer(PictureBox overlayBox, Color transparencyKey)
+        public SelectionDrawer(SelectionCanvas selectionCanvas, MouseEvents mouseEvents, Color selectionColour)
         {
-            _overlayBox = overlayBox;
-            _overlayBox.MouseDown += OnMouseDown;
-            _overlayBox.MouseMove += OnMouseMove;
-            _overlayBox.MouseUp += OnMouseUp;
-
-            _transparencyKey = transparencyKey;
+            _selectionBrush = new SolidBrush(selectionColour);
+            _selectionCanvas = selectionCanvas;
+            mouseEvents.MouseDown += OnMouseDown;
+            mouseEvents.MouseMove += OnMouseMove;
+            mouseEvents.MouseUp += OnMouseUp;
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            _choosingRectangle = true;
+            _selecting = true;
             _startLocation = e.Location;
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (_choosingRectangle)
-            {
-                Clear(Selection);
-                var newSelection = CalculateRectangle(_startLocation, e.Location);
-                Select(newSelection);
+            //if (_selecting)
+            //{
+            //    Clear(Selection);
+            //    var newSelection = CalculateRectangle(_startLocation, e.Location);
+            //    Select(newSelection);
 
-                _overlayBox.Invalidate(GetContainingRectangle(Selection, newSelection));
-                Selection = newSelection;
-            }
+            //    _overlayBox.Invalidate(GetContainingRectangle(Selection, newSelection));
+            //    Selection = newSelection;
+            //}
         }
 
         private void Clear(Rectangle rectangle)
         {
             var brush = new SolidBrush(Color.Transparent);
-            using (Graphics g = Graphics.FromImage(_overlayBox.Image))
+            using (Graphics g = Graphics.FromImage(_selectionCanvas.Canvas))
             {
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 g.FillRectangle(brush, rectangle);
@@ -64,10 +63,9 @@ namespace SelfHostedYoloScreenCapture
 
         private void Select(Rectangle rectangle)
         {
-            var brush = new SolidBrush(_transparencyKey);
-            using (Graphics g = Graphics.FromImage(_overlayBox.Image))
+            using (Graphics g = Graphics.FromImage(_selectionCanvas.Canvas))
             {
-                g.FillRectangle(brush, rectangle);
+                g.FillRectangle(_selectionBrush, rectangle);
             }
         }
 
@@ -76,15 +74,24 @@ namespace SelfHostedYoloScreenCapture
             var startX = Math.Min(rectangle1.X, rectangle2.X);
             var startY = Math.Min(rectangle1.Y, rectangle2.Y);
 
-            var width = Math.Max(rectangle1.Width, rectangle2.Width);
-            var height = Math.Max(rectangle1.Height, rectangle2.Height);
+            var endX = Math.Max(rectangle1.Right, rectangle2.Right);
+            var endY = Math.Max(rectangle1.Bottom, rectangle2.Bottom);
 
-            return new Rectangle(new Point(startX, startY), new Size(width, height));
+            return new Rectangle(new Point(startX, startY), new Size(endX - startX, endY - startY));
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
-            _choosingRectangle = false;
+            if (_selecting)
+            {
+                Clear(Selection);
+                var newSelection = CalculateRectangle(_startLocation, e.Location);
+                Select(newSelection);
+
+                _selectionCanvas.InvalidateCanvas(GetContainingRectangle(Selection, newSelection));
+                Selection = newSelection;
+            }
+            _selecting = false;
         }
     }
 }

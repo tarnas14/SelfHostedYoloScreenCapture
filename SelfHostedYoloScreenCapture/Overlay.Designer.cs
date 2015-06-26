@@ -1,6 +1,6 @@
 ﻿namespace SelfHostedYoloScreenCapture
 {
-    partial class ScreenCaptureUi
+    partial class Overlay
     {
         /// <summary>
         /// Required designer variable.
@@ -28,39 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._overlayBox = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this._overlayBox)).BeginInit();
+            this._selectionCanvas = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this._selectionCanvas)).BeginInit();
             this.SuspendLayout();
             // 
-            // _overlayBox
+            // _selectionCanvas
             // 
-            this._overlayBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this._selectionCanvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._overlayBox.Location = new System.Drawing.Point(0, -1);
-            this._overlayBox.Name = "_overlayBox";
-            this._overlayBox.Size = new System.Drawing.Size(286, 264);
-            this._overlayBox.TabIndex = 0;
-            this._overlayBox.TabStop = false;
+            this._selectionCanvas.Location = new System.Drawing.Point(-1, -1);
+            this._selectionCanvas.Name = "_selectionCanvas";
+            this._selectionCanvas.Size = new System.Drawing.Size(286, 265);
+            this._selectionCanvas.TabIndex = 0;
+            this._selectionCanvas.TabStop = false;
             // 
-            // ScreenCaptureUi
+            // Overlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.ControlBox = false;
-            this.Controls.Add(this._overlayBox);
-            this.Name = "ScreenCaptureUi";
+            this.Controls.Add(this._selectionCanvas);
+            this.Name = "Overlay";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this._overlayBox)).EndInit();
+            this.Text = "Overlay";
+            ((System.ComponentModel.ISupportInitialize)(this._selectionCanvas)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox _overlayBox;
+        private System.Windows.Forms.PictureBox _selectionCanvas;
     }
 }
-
