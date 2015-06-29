@@ -5,6 +5,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import multiparty from 'multiparty';
 import fs from 'fs';
+import path from 'path';
+
+let configJson = fs.readFileSync(path.resolve('./', 'build', 'config.json'));
+let config = JSON.parse(configJson);
+
+if(!config.path) {
+    throw new Error('provide config json with specified path');
+}
 
 let app = express();
 app.use(bodyParser.json());
@@ -36,7 +44,7 @@ app.post('/upload', (req, res) => {
 
         if (_isAFile(part)) {
             console.log('got file named ' + part.filename);
-            part.pipe(fs.createWriteStream('../Server/_upload/' + part.filename));
+            part.pipe(fs.createWriteStream(path.resolve(config.path, part.filename)));
         }
 
         part.on('error', function(err) {
