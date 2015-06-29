@@ -7,7 +7,7 @@ import multiparty from 'multiparty';
 import fs from 'fs';
 import path from 'path';
 
-let configJson = fs.readFileSync(path.resolve('./', 'build', 'config.json'));
+let configJson = fs.readFileSync(path.resolve('./', 'config.json'));
 let config = JSON.parse(configJson);
 
 if(!config.path) {
