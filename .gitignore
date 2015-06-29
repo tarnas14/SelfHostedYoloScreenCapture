@@ -192,3 +192,4 @@ ModelManifest.xml
 node_modules
 build/
 *.sublime-workspace
+_upload/
