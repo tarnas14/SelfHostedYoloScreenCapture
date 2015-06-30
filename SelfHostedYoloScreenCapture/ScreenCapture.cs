@@ -11,7 +11,8 @@
         {
             InitializeComponent();
 
-            SetupHotkey();
+            SetupHotkeys();
+            SetupGlobalHotkey();
 
             TopMost = true;
 
@@ -22,18 +23,41 @@
             Location = virtualScreen.Location;
             Size = virtualScreen.Size;
 
-            _canvas.Size = virtualScreen.Size;
-            _canvas.BackgroundImage = new Bitmap(virtualScreen.Size.Width, virtualScreen.Size.Height);
-            using (var graphics = Graphics.FromImage(_canvas.BackgroundImage))
-            {
-                graphics.CopyFromScreen(virtualScreen.Left, virtualScreen.Top, 0, 0, virtualScreen.Size);
-            }
-
-            _canvas.Image = new Bitmap(virtualScreen.Size.Width, virtualScreen.Size.Height);
-            new SelectionDrawer(new PictureBoxCanvasDecorator(_canvas));
+            _canvas.Size = Size;
+            SetupCaptureCanvas(_canvas);
+            ScreenToCanvas(_canvas);
         }
 
-        private void SetupHotkey()
+        private void SetupCaptureCanvas(PictureBox canvas)
+        {
+            _canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+
+            new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
+        }
+
+        private void ScreenToCanvas(PictureBox canvas)
+        {
+            using (var graphics = Graphics.FromImage(canvas.BackgroundImage))
+            {
+                graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, canvas.Size);
+            }
+        }
+        
+        private void SetupHotkeys()
+        {
+            KeyDown += HideOnEscape;
+        }
+
+        private void HideOnEscape(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Hide();
+            }
+        }
+
+        private void SetupGlobalHotkey()
         {
             var hotkey = new Hotkey
             {
@@ -41,12 +65,15 @@
                 Enabled = true
             };
 
-            hotkey.HotkeyPressed += Test;
+            hotkey.HotkeyPressed += StartNewScreenCapture;
         }
 
-        private void Test(object sender, EventArgs e)
+        private void StartNewScreenCapture(object sender, EventArgs e)
         {
-            Console.WriteLine("test");
+            ScreenToCanvas(_canvas);
+            Show();
+            BringToFront();
+            Activate();
         }
     }
 }
