@@ -7,6 +7,8 @@
 
     public partial class ScreenCapture : Form
     {
+        private SelectionDrawer _selectionDrawer;
+
         public ScreenCapture()
         {
             InitializeComponent();
@@ -33,7 +35,7 @@
             _canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
 
-            new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
+            _selectionDrawer = new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
         }
 
         private void ScreenToCanvas(PictureBox canvas)
@@ -47,6 +49,7 @@
         private void SetupHotkeys()
         {
             KeyDown += HideOnEscape;
+            KeyDown += CopyToClipboard;
         }
 
         private void HideOnEscape(object sender, KeyEventArgs e)
@@ -55,6 +58,28 @@
             {
                 Hide();
             }
+        }
+
+        private void CopyToClipboard(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetImage(CaptureSelection(_canvas, _selectionDrawer.Selection));
+                Hide();
+            }
+        }
+
+        private Image CaptureSelection(PictureBox canvas, Rectangle selection)
+        {
+            var pictureToClipboard = new Bitmap(selection.Width, selection.Height);
+            var pictureRectangle = new RectangleF(new PointF(0, 0),
+                new SizeF(pictureToClipboard.Width, pictureToClipboard.Height));
+            using (var graphics = Graphics.FromImage(pictureToClipboard))
+            {
+                graphics.DrawImage(canvas.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
+            }
+
+            return pictureToClipboard;
         }
 
         private void SetupGlobalHotkey()
