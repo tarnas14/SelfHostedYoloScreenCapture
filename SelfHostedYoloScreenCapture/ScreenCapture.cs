@@ -1,13 +1,17 @@
 ﻿namespace SelfHostedYoloScreenCapture
 {
+    using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using ManagedWinapi;
 
     public partial class ScreenCapture : Form
     {
         public ScreenCapture()
         {
             InitializeComponent();
+
+            SetupHotkey();
 
             TopMost = true;
 
@@ -27,6 +31,22 @@
 
             _canvas.Image = new Bitmap(virtualScreen.Size.Width, virtualScreen.Size.Height);
             new SelectionDrawer(new PictureBoxCanvasDecorator(_canvas));
+        }
+
+        private void SetupHotkey()
+        {
+            var hotkey = new Hotkey
+            {
+                KeyCode = Keys.PrintScreen,
+                Enabled = true
+            };
+
+            hotkey.HotkeyPressed += Test;
+        }
+
+        private void Test(object sender, EventArgs e)
+        {
+            Console.WriteLine("test");
         }
     }
 }
