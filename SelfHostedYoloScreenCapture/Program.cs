@@ -3,8 +3,10 @@
     using System;
     using System.Windows.Forms;
 
-    static class Program
+    class Program
     {
+        private TrayIcon _trayIcon;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -13,7 +15,17 @@
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ScreenCapture());
+            var program = new Program();
+            program.Run();
+        }
+
+        public void Run()
+        {
+            _trayIcon = new TrayIcon();
+
+            Application.Run(new ScreenCapture(_trayIcon));
+
+            _trayIcon.Dispose();
         }
     }
 }

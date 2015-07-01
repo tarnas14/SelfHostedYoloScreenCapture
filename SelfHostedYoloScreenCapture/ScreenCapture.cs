@@ -9,9 +9,11 @@
     {
         private SelectionDrawer _selectionDrawer;
 
-        public ScreenCapture()
+        public ScreenCapture(TrayIcon trayIcon)
         {
             InitializeComponent();
+
+            SetupIconEvents(trayIcon);
 
             SetupHotkeys();
             SetupGlobalHotkey();
@@ -28,6 +30,16 @@
             _canvas.Size = Size;
             SetupCaptureCanvas(_canvas);
             ScreenToCanvas(_canvas);
+        }
+
+        private void SetupIconEvents(TrayIcon trayIcon)
+        {
+            trayIcon.Exit += Exit;
+        }
+
+        private void Exit(object sender, EventArgs e)
+        {
+            Close();
         }
 
         private void SetupCaptureCanvas(PictureBox canvas)
