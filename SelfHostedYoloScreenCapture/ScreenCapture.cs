@@ -8,9 +8,11 @@
     public partial class ScreenCapture : Form
     {
         private SelectionDrawer _selectionDrawer;
+        private readonly PhotoUploader _photoUploader;
 
-        public ScreenCapture(TrayIcon trayIcon)
+        public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader)
         {
+            _photoUploader = photoUploader;
             InitializeComponent();
 
             SetupIconEvents(trayIcon);
@@ -30,6 +32,7 @@
             _canvas.Size = Size;
             SetupCaptureCanvas(_canvas);
             ScreenToCanvas(_canvas);
+            SetupActionBox();
         }
 
         private void SetupIconEvents(TrayIcon trayIcon)
@@ -50,6 +53,12 @@
             _selectionDrawer = new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
         }
 
+        private void SetupActionBox()
+        {
+            _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
+            _actionBox.Upload += (sender, args) => _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
+        }
+
         private void ScreenToCanvas(PictureBox canvas)
         {
             using (var graphics = Graphics.FromImage(canvas.BackgroundImage))
@@ -66,19 +75,23 @@
 
         private void HideOnEscape(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (e.KeyCode != Keys.Escape)
             {
-                Hide();
+                return;
             }
+
+            Hide();
         }
 
-        private void CopyToClipboard(object sender, KeyEventArgs e)
+        private void CopyToClipboard(object sender, KeyEventArgs args)
         {
-            if (e.Control && e.KeyCode == Keys.C)
+            if (!args.Control || args.KeyCode != Keys.C)
             {
-                Clipboard.SetImage(CaptureSelection(_canvas, _selectionDrawer.Selection));
-                Hide();
+                return;
             }
+
+            Clipboard.SetImage(CaptureSelection(_canvas, _selectionDrawer.Selection));
+            Hide();
         }
 
         private Image CaptureSelection(PictureBox canvas, Rectangle selection)
@@ -108,6 +121,8 @@
         private void StartNewScreenCapture(object sender, EventArgs e)
         {
             ScreenToCanvas(_canvas);
+            _selectionDrawer.ResetSelection();
+            _actionBox.Hide();
             Show();
             BringToFront();
             Activate();

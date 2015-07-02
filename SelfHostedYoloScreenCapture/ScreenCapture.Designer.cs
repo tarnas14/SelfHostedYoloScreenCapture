@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this._canvas = new System.Windows.Forms.PictureBox();
+            this._actionBox = new SelfHostedYoloScreenCapture.ActionBox();
             ((System.ComponentModel.ISupportInitialize)(this._canvas)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,12 +45,20 @@
             this._canvas.TabIndex = 0;
             this._canvas.TabStop = false;
             // 
+            // _actionBox
+            // 
+            this._actionBox.Location = new System.Drawing.Point(12, 12);
+            this._actionBox.Name = "_actionBox";
+            this._actionBox.Size = new System.Drawing.Size(33, 23);
+            this._actionBox.TabIndex = 1;
+            // 
             // ScreenCapture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.ControlBox = false;
+            this.Controls.Add(this._actionBox);
             this.Controls.Add(this._canvas);
             this.Name = "ScreenCapture";
             this.Text = "ScreenCapture";
@@ -61,5 +70,6 @@
         #endregion
 
         private System.Windows.Forms.PictureBox _canvas;
+        private ActionBox _actionBox;
     }
 }

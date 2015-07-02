@@ -23,7 +23,7 @@
         {
             _trayIcon = new TrayIcon();
 
-            Application.Run(new ScreenCapture(_trayIcon));
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader()));
 
             _trayIcon.Dispose();
         }

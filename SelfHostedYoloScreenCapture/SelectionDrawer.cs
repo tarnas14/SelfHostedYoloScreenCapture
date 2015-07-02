@@ -2,6 +2,7 @@
 {
     using System;
     using System.Drawing;
+    using System.Drawing.Drawing2D;
     using System.Windows.Forms;
 
     public class SelectionDrawer
@@ -12,6 +13,7 @@
         private SolidBrush _overlayBrush;
         private int _moveCounter;
 
+        public event EventHandler<RectangleSelectedEventArgs> RectangleSelected;
         public Rectangle Selection { get; private set; }
 
         public SelectionDrawer(SelectionCanvas selectionCanvas)
@@ -29,6 +31,8 @@
             _overlayBrush = new SolidBrush(Color.FromArgb(100, Color.Black));
             using (var graphics = Graphics.FromImage(_selectionCanvas.Canvas))
             {
+                Selection = new Rectangle();
+                graphics.Clear(Color.Transparent);
                 graphics.FillRectangle(_overlayBrush, new Rectangle(Point.Empty, _selectionCanvas.Canvas.Size));
             }
         }
@@ -99,6 +103,18 @@
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             _selecting = false;
+            if (RectangleSelected != null)
+            {
+                RectangleSelected(this, new RectangleSelectedEventArgs
+                {
+                    Selection = Selection
+                });
+            }
+        }
+
+        public void ResetSelection()
+        {
+            PrepareOverlay();
         }
     }
 }
