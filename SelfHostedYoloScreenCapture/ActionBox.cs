@@ -3,10 +3,12 @@
 namespace SelfHostedYoloScreenCapture
 {
     using System;
+    using System.Drawing;
 
     public partial class ActionBox : UserControl
     {
         public event EventHandler Upload;
+        public event EventHandler<KeyEventArgs> Escape;
 
         public ActionBox()
         {
@@ -24,11 +26,45 @@ namespace SelfHostedYoloScreenCapture
                     Upload(this, EventArgs.Empty);
                 }
             };
+
+            _upload.KeyDown += (sender, args) =>
+            {
+                if (args.KeyCode == Keys.Escape && Escape != null)
+                {
+                    Escape(this, args);
+                }
+            };
         }
 
         public void DrawCloseTo(object sender, RectangleSelectedEventArgs args)
         {
-            Visible = true;
+            var actionBoxWidth = Width;
+            var actionBoxHeight = Height;
+
+            var roomAboveSelection = args.Selection.Y;
+            var x = args.Selection.Right - actionBoxWidth;
+
+            if (roomAboveSelection >= actionBoxHeight)
+            {
+                var y = args.Selection.Y - actionBoxHeight;
+                Location = new Point(x, y);
+                Visible = true;
+                return;
+            }
+
+            var roomBelowSelection = args.CanvasSize.Height - args.Selection.Bottom;
+
+            if (roomBelowSelection >= actionBoxHeight)
+            {
+                var y = args.Selection.Bottom;
+                Location = new Point(x, y);
+                Visible = true;
+            }
+        }
+
+        public void HideActions(object sender, EventArgs e)
+        {
+            Hide();
         }
     }
 }

@@ -6,5 +6,6 @@
     public class RectangleSelectedEventArgs : EventArgs
     {
         public Rectangle Selection { get; set; }
+        public Size CanvasSize { get; set; }
     }
 }

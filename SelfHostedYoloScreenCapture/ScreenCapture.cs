@@ -56,7 +56,9 @@
         private void SetupActionBox()
         {
             _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
+            _selectionDrawer.NewSelectionStarted += _actionBox.HideActions;
             _actionBox.Upload += (sender, args) => _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
+            _actionBox.Escape += HideOnEscape;
         }
 
         private void ScreenToCanvas(PictureBox canvas)

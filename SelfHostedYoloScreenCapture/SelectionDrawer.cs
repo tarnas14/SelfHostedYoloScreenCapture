@@ -2,7 +2,6 @@
 {
     using System;
     using System.Drawing;
-    using System.Drawing.Drawing2D;
     using System.Windows.Forms;
 
     public class SelectionDrawer
@@ -14,6 +13,8 @@
         private int _moveCounter;
 
         public event EventHandler<RectangleSelectedEventArgs> RectangleSelected;
+        public event EventHandler NewSelectionStarted;
+
         public Rectangle Selection { get; private set; }
 
         public SelectionDrawer(SelectionCanvas selectionCanvas)
@@ -41,6 +42,10 @@
         {
             _selecting = true;
             _startLocation = e.Location;
+            if (NewSelectionStarted != null)
+            {
+                NewSelectionStarted(this, EventArgs.Empty);
+            }
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
@@ -107,7 +112,8 @@
             {
                 RectangleSelected(this, new RectangleSelectedEventArgs
                 {
-                    Selection = Selection
+                    Selection = Selection,
+                    CanvasSize = _selectionCanvas.Canvas.Size
                 });
             }
         }
