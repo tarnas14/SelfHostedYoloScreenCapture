@@ -8,7 +8,7 @@ namespace SelfHostedYoloScreenCapture
     public partial class ActionBox : UserControl
     {
         public event EventHandler Upload;
-        public event EventHandler<KeyEventArgs> Escape;
+        public event KeyEventHandler KeyDownBubble;
 
         public ActionBox()
         {
@@ -27,11 +27,16 @@ namespace SelfHostedYoloScreenCapture
                 }
             };
 
-            _upload.KeyDown += (sender, args) =>
+            BubbleKeyDown(_upload);
+        }
+
+        private void BubbleKeyDown(Control bubbledControl)
+        {
+            bubbledControl.KeyDown += (sender, args) =>
             {
-                if (args.KeyCode == Keys.Escape && Escape != null)
+                if (KeyDownBubble != null)
                 {
-                    Escape(this, args);
+                    KeyDownBubble(sender, args);
                 }
             };
         }

@@ -1,6 +1,7 @@
 ﻿namespace SelfHostedYoloScreenCapture
 {
     using System;
+    using System.Drawing;
     using System.Windows.Forms;
 
     class Program
@@ -23,7 +24,9 @@
         {
             _trayIcon = new TrayIcon();
 
-            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader()));
+            //var captureRectangle = new Rectangle(new Point(0, 0), new Size(800, 600));
+            var captureRectangle = SystemInformation.VirtualScreen;
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(), captureRectangle));
 
             _trayIcon.Dispose();
         }

@@ -10,7 +10,7 @@
         private SelectionDrawer _selectionDrawer;
         private readonly PhotoUploader _photoUploader;
 
-        public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader)
+        public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader, Rectangle captureRectangle)
         {
             _photoUploader = photoUploader;
             InitializeComponent();
@@ -25,9 +25,8 @@
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.Manual;
 
-            var virtualScreen = SystemInformation.VirtualScreen;
-            Location = virtualScreen.Location;
-            Size = virtualScreen.Size;
+            Location = captureRectangle.Location;
+            Size = captureRectangle.Size;
 
             _canvas.Size = Size;
             SetupCaptureCanvas(_canvas);
@@ -58,7 +57,6 @@
             _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
             _selectionDrawer.NewSelectionStarted += _actionBox.HideActions;
             _actionBox.Upload += (sender, args) => _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
-            _actionBox.Escape += HideOnEscape;
         }
 
         private void ScreenToCanvas(PictureBox canvas)
@@ -72,12 +70,14 @@
         private void SetupHotkeys()
         {
             KeyDown += HideOnEscape;
+            _actionBox.KeyDownBubble += HideOnEscape;
             KeyDown += CopyToClipboard;
+            _actionBox.KeyDownBubble += CopyToClipboard;
         }
 
         private void HideOnEscape(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Escape)
+            if (e.KeyCode != Keys.Escape || e.Control || e.Alt || e.Shift)
             {
                 return;
             }
@@ -87,7 +87,7 @@
 
         private void CopyToClipboard(object sender, KeyEventArgs args)
         {
-            if (!args.Control || args.KeyCode != Keys.C)
+            if (!args.Control || args.KeyCode != Keys.C || args.Shift || args.Alt)
             {
                 return;
             }
