@@ -3,6 +3,7 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using Configuration;
 
     class Program
     {
@@ -24,11 +25,21 @@
         {
             _trayIcon = new TrayIcon();
 
-            //var captureRectangle = new Rectangle(new Point(0, 0), new Size(800, 600));
-            var captureRectangle = SystemInformation.VirtualScreen;
-            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(), captureRectangle));
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(), ConfigureCaptureRectangle()));
 
             _trayIcon.Dispose();
+        }
+
+        private Rectangle ConfigureCaptureRectangle()
+        {
+            var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
+
+            if (configuration.Fullscreen)
+            {
+                return SystemInformation.VirtualScreen;
+            }
+
+            return configuration.CustomCaptureRectangle;
         }
     }
 }
