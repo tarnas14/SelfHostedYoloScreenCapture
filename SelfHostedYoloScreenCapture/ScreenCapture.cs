@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
     using ManagedWinapi;
+    using PhotoUploading;
 
     public partial class ScreenCapture : Form
     {

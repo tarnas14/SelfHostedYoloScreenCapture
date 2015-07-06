@@ -72,8 +72,15 @@
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
-    <Compile Include="FireAndForgetPhotoUploader.cs" />
-    <Compile Include="PhotoUploader.cs" />
+    <Compile Include="PhotoUploading\FireAndForgetPhotoUploader.cs" />
+    <Compile Include="PhotoUploading\PhotoUploader.cs" />
+    <Compile Include="PhotoUploading\PhotoUploaderPresentingResult.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PhotoUploading\PhotoUploaderPresentingResult.Designer.cs">
+      <DependentUpon>PhotoUploaderPresentingResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PhotoUploading\RequestFactory.cs" />
     <Compile Include="PictureBoxCanvasDecorator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

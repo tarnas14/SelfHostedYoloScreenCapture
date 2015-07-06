@@ -1,4 +1,4 @@
-namespace SelfHostedYoloScreenCapture
+namespace SelfHostedYoloScreenCapture.PhotoUploading
 {
     using System.Drawing;
 

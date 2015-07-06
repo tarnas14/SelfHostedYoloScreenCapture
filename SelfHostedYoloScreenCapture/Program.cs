@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
     using Configuration;
+    using PhotoUploading;
 
     class Program
     {
