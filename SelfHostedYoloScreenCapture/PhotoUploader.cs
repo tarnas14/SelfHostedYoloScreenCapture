@@ -6,6 +6,7 @@
     using System.IO;
     using System.Net;
     using System.Net.Http;
+    using Newtonsoft.Json;
 
     public class PhotoUploader
     {
@@ -33,9 +34,17 @@
 
                 var httpResponseMessage = client.SendAsync(requestMessage).Result;
 
-                var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                Console.WriteLine(result);
+                var resultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+                var resultObject = JsonConvert.DeserializeObject<ServerResult>(resultString);
+
+                Console.WriteLine(resultObject.ImagePath);
             }
+        }
+
+        class ServerResult
+        {
+            public string ImagePath { get; set; }
         }
     }
 }
