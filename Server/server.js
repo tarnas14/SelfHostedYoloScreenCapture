@@ -37,10 +37,10 @@ app.get('/', (req, res) => {
 app.post('/upload', (req, res) => {
     _saveAnImage(req, function(imagePath) {
         console.log('Upload completed!');
-        let response = '<div>Here is your image: ' + imagePath + '</div>';
+        let response = { imagePath: imagePath };
 
-        res.writeHead(200, {'content-type': 'text/html'});
-        res.end(response);
+        res.writeHead(200, {'content-type': 'application/json'});
+        res.end(JSON.stringify(response));
     });
 });
 
@@ -56,7 +56,9 @@ function _saveAnImage(req, successCallback) {
         if (_isAFile(part)) {
             console.log('got file named ' + part.filename);
 
-            savePath = path.resolve(config.path, part.filename);
+            let timestampFilename = Date.now().toString() + part.filename;
+
+            savePath = path.resolve(config.path, timestampFilename);
             part.pipe(fs.createWriteStream(savePath));
         }
 
