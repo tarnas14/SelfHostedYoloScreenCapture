@@ -18,19 +18,24 @@
 
         public void Upload(Image capturedSelection)
         {
-            var client = new HttpClient();
-            var stream = new MemoryStream();
-            capturedSelection.Save(stream, ImageFormat.Jpeg);
-            var streamContent = new ByteArrayContent(stream.ToArray());
-            streamContent.Headers.Add("Content-Type", "image/jpeg");
+            using (var client = new HttpClient())
+            {
+                var stream = new MemoryStream();
+                capturedSelection.Save(stream, ImageFormat.Jpeg);
+                var streamContent = new ByteArrayContent(stream.ToArray());
+                streamContent.Headers.Add("Content-Type", "image/jpeg");
 
-            var multipartFormDataContent = new MultipartFormDataContent();
-            multipartFormDataContent.Add(streamContent, "upload", "tmp.jpg");
+                var multipartFormDataContent = new MultipartFormDataContent();
+                multipartFormDataContent.Add(streamContent, "upload", "tmp.jpg");
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, _serverPath);
-            requestMessage.Content = multipartFormDataContent;
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, _serverPath);
+                requestMessage.Content = multipartFormDataContent;
 
-            client.SendAsync(requestMessage);
+                var httpResponseMessage = client.SendAsync(requestMessage).Result;
+
+                var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(result);
+            }
         }
     }
 }
