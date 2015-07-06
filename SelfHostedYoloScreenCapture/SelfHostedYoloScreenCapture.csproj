@@ -72,6 +72,7 @@
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
+    <Compile Include="FireAndForgetPhotoUploader.cs" />
     <Compile Include="PhotoUploader.cs" />
     <Compile Include="PictureBoxCanvasDecorator.cs" />
     <Compile Include="Program.cs" />

@@ -56,7 +56,13 @@
         {
             _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
             _selectionDrawer.NewSelectionStarted += _actionBox.HideActions;
-            _actionBox.Upload += (sender, args) => _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
+            _actionBox.Upload += UploadSelection;
+        }
+
+        private void UploadSelection(object sender, EventArgs e)
+        {
+            Hide();
+            _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
         }
 
         private void ScreenToCanvas(PictureBox canvas)
