@@ -25,21 +25,21 @@
         {
             _trayIcon = new TrayIcon();
 
-            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(), ConfigureCaptureRectangle()));
+            var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
+
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(configuration.ServerPath), ConfigureCaptureRectangle(configuration)));
 
             _trayIcon.Dispose();
         }
 
-        private Rectangle ConfigureCaptureRectangle()
+        private Rectangle ConfigureCaptureRectangle(ScreenCaptureConfiguration screenCaptureConfiguration)
         {
-            var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
-
-            if (configuration.Fullscreen)
+            if (screenCaptureConfiguration.Fullscreen)
             {
                 return SystemInformation.VirtualScreen;
             }
 
-            return configuration.CustomCaptureRectangle;
+            return screenCaptureConfiguration.CustomCaptureRectangle;
         }
     }
 }
