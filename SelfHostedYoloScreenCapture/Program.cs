@@ -28,7 +28,7 @@
 
             var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
 
-            Application.Run(new ScreenCapture(_trayIcon, new FireAndForgetPhotoUploader(configuration.ServerPath), ConfigureCaptureRectangle(configuration)));
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.ServerPath), ConfigureCaptureRectangle(configuration)));
 
             _trayIcon.Dispose();
         }

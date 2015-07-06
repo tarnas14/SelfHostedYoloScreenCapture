@@ -51,6 +51,7 @@
             this._actionBox.Name = "_actionBox";
             this._actionBox.Size = new System.Drawing.Size(33, 23);
             this._actionBox.TabIndex = 1;
+            this._actionBox.Visible = false;
             // 
             // ScreenCapture
             // 
@@ -61,6 +62,7 @@
             this.Controls.Add(this._actionBox);
             this.Controls.Add(this._canvas);
             this.Name = "ScreenCapture";
+            this.ShowInTaskbar = false;
             this.Text = "ScreenCapture";
             ((System.ComponentModel.ISupportInitialize)(this._canvas)).EndInit();
             this.ResumeLayout(false);

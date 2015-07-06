@@ -97,6 +97,9 @@
     <EmbeddedResource Include="ActionBox.resx">
       <DependentUpon>ActionBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PhotoUploading\PhotoUploaderPresentingResult.resx">
+      <DependentUpon>PhotoUploaderPresentingResult.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
