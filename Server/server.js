@@ -18,7 +18,7 @@ let app = express();
 app.use(bodyParser.json());
 
 let server = http.createServer(app);
-let portNumber = 4000;
+let portNumber = config.port ? config.port : 4000;
 
 console.log('Listening on port ' + portNumber);
 server.listen(portNumber);
@@ -34,10 +34,20 @@ app.get('/', (req, res) => {
     );
 });
 
+app.get('/image/:imagename', (req, res) => {
+    let imagePath = path.resolve('./_upload', req.params.imagename);
+    res.sendFile(imagePath, (error) => {
+        if (error) {
+            console.log(error);
+            res.status(error.status).end();
+        }
+    });
+});
+
 app.post('/upload', (req, res) => {
-    _saveAnImage(req, function(imagePath) {
+    _saveAnImage(req, function(imageName) {
         console.log('Upload completed!');
-        let response = { imagePath: imagePath };
+        let response = { imageName: imageName };
 
         res.writeHead(200, {'content-type': 'application/json'});
         res.end(JSON.stringify(response));
@@ -46,7 +56,7 @@ app.post('/upload', (req, res) => {
 
 function _saveAnImage(req, successCallback) {
     let form = new multiparty.Form();
-    let savePath = '';
+    let timestampImageName = '';
 
     form.on('part', function(part) {
         if (!_isAFile(part)) {
@@ -56,9 +66,10 @@ function _saveAnImage(req, successCallback) {
         if (_isAFile(part)) {
             console.log('got file named ' + part.filename);
 
-            let timestampFilename = Date.now().toString() + part.filename;
+            let imageExtension = part.filename.substring(part.filename.lastIndexOf('.'));
+            timestampImageName = Date.now().toString() + imageExtension;
 
-            savePath = path.resolve(config.path, timestampFilename);
+            let savePath = path.resolve(config.path, timestampImageName);
             part.pipe(fs.createWriteStream(savePath));
         }
 
@@ -68,7 +79,7 @@ function _saveAnImage(req, successCallback) {
     });
 
     form.on('close', function() {
-        successCallback(savePath);
+        successCallback(timestampImageName);
     });
 
     form.parse(req);
