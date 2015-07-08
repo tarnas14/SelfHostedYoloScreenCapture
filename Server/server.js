@@ -18,7 +18,7 @@ let app = express();
 app.use(bodyParser.json());
 
 let server = http.createServer(app);
-let portNumber = 4000;
+let portNumber = config.port ? config.port : 4000;
 
 console.log('Listening on port ' + portNumber);
 server.listen(portNumber);
