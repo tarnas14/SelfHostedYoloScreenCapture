@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
     using Configuration;
+    using PhotoUploading;
 
     class Program
     {
@@ -27,7 +28,7 @@
 
             var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
 
-            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploader(configuration.ServerPath), ConfigureCaptureRectangle(configuration)));
+            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.ServerPath), ConfigureCaptureRectangle(configuration)));
 
             _trayIcon.Dispose();
         }
