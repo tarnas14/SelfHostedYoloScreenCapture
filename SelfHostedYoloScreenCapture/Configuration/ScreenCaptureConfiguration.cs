@@ -6,8 +6,8 @@
     {
         public bool Fullscreen { get; set; }
         public Rectangle CustomCaptureRectangle { get; set; }
-
-        public string ServerPath { get; set; }
+        public string UploadPath { get; set; }
+        public string PictureGetPath { get; set; }
 
         public ScreenCaptureConfiguration Default
         {
@@ -17,7 +17,8 @@
                 {
                     Fullscreen = true,
                     CustomCaptureRectangle = new Rectangle(new Point(0, 0), new Size(800, 600)),
-                    ServerPath = "http://localhost.fiddler:4000/upload"
+                    UploadPath = "http://localhost:4000/upload",
+                    PictureGetPath = "http://localhost:4000/image"
                 };
             }
         }

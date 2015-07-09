@@ -7,11 +7,13 @@
 
     public partial class PhotoUploaderPresentingResult : Form, PhotoUploader
     {
-        private readonly string _serverPath;
+        private readonly string _uploadPath;
+        private readonly string _serverGetPicturePath;
 
-        public PhotoUploaderPresentingResult(string serverPath)
+        public PhotoUploaderPresentingResult(string uploadPath, string serverGetPicturePath)
         {
-            _serverPath = serverPath;
+            _uploadPath = uploadPath;
+            _serverGetPicturePath = serverGetPicturePath;
             InitializeComponent();
             _progressBar.Style = ProgressBarStyle.Marquee;
             _progressBar.MarqueeAnimationSpeed = 30;
@@ -27,7 +29,7 @@
         public void Upload(Image capturedSelection)
         {
             ShowUploader();
-            var httpRequestMessage = RequestFactory.GetMessage(capturedSelection, _serverPath);
+            var httpRequestMessage = RequestFactory.GetMessage(capturedSelection, _uploadPath);
 
             using (var httpClient = new HttpClient())
             {
@@ -37,9 +39,15 @@
 
                 var result = JsonConvert.DeserializeObject<ServerResult>(resultString);
 
-                _path.Text = result.ImagePath;
+                _path.Text = PutPictureGetPathTogether(_serverGetPicturePath, result.ImageName);
                 _progressBar.Visible = false;
             }
+        }
+
+        private string PutPictureGetPathTogether(string serverGetPicturePath, string imageName)
+        {
+            var slashAtTheEndOfPath = serverGetPicturePath.EndsWith("/") ? string.Empty : "/";
+            return string.Format("{0}{1}{2}", serverGetPicturePath, slashAtTheEndOfPath, imageName);
         }
 
         private void ShowUploader()
@@ -52,7 +60,7 @@
 
         struct ServerResult
         {
-            public string ImagePath { get; set; }
+            public string ImageName { get; set; }
         }
     }
 }

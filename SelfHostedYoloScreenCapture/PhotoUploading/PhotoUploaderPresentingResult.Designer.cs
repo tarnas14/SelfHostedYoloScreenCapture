@@ -79,7 +79,6 @@
             this.Name = "PhotoUploaderPresentingResult";
             this.ShowInTaskbar = false;
             this.Text = "PhotoUploaderPresentingResult";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 
