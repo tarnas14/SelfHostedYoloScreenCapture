@@ -3,7 +3,9 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using System.Windows.Forms.VisualStyles;
     using Configuration;
+    using ManagedWinapi;
     using PhotoUploading;
 
     class Program
@@ -28,9 +30,39 @@
 
             var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
 
-            Application.Run(new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.UploadPath, configuration.PictureGetPath), ConfigureCaptureRectangle(configuration)));
+            var screenCapture = new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.UploadPath, configuration.PictureGetPath), ConfigureCaptureRectangle(configuration));
+
+            if (SetupGlobalHotkey(configuration.GlobalHotkey, screenCapture))
+            {
+                Application.Run(screenCapture);
+            }
 
             _trayIcon.Dispose();
+        }
+
+        private bool SetupGlobalHotkey(HotkeyConfiguration globalHotkey, ScreenCapture screenCapture)
+        {
+            try
+            {
+                var hotkey = new Hotkey
+                {
+                    Alt = globalHotkey.Alt,
+                    Ctrl = globalHotkey.Ctrl,
+                    Shift = globalHotkey.Shift,
+                    WindowsKey = globalHotkey.WindowsKey,
+                    KeyCode = globalHotkey.KeyCode,
+                    Enabled = true
+                };
+
+                hotkey.HotkeyPressed += screenCapture.StartNewScreenCapture;
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("This hotkey is already bound to an action. Change configuration to bind SelfHostedYoloScreenCapture to an available hotkey.","Hotkey taken",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
         }
 
         private Rectangle ConfigureCaptureRectangle(ScreenCaptureConfiguration screenCaptureConfiguration)

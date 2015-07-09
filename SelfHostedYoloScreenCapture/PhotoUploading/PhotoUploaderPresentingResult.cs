@@ -62,5 +62,10 @@
         {
             public string ImageName { get; set; }
         }
+
+        private void PhotoUploaderPresentingResult_Load(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

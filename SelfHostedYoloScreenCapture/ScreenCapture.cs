@@ -3,7 +3,6 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using ManagedWinapi;
     using PhotoUploading;
 
     public partial class ScreenCapture : Form
@@ -19,7 +18,6 @@
             SetupIconEvents(trayIcon);
 
             SetupHotkeys();
-            SetupGlobalHotkey();
 
             TopMost = true;
 
@@ -116,18 +114,7 @@
             return pictureToClipboard;
         }
 
-        private void SetupGlobalHotkey()
-        {
-            var hotkey = new Hotkey
-            {
-                KeyCode = Keys.PrintScreen,
-                Enabled = true
-            };
-
-            hotkey.HotkeyPressed += StartNewScreenCapture;
-        }
-
-        private void StartNewScreenCapture(object sender, EventArgs e)
+        public void StartNewScreenCapture(object sender, EventArgs e)
         {
             ScreenToCanvas(_canvas);
             _selectionDrawer.ResetSelection();
