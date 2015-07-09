@@ -50,11 +50,6 @@
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if ((_moveCounter++)%30 != 0)
-            {
-                return;
-            }
-
             if (_selecting)
             {
                 Clear(Selection);
