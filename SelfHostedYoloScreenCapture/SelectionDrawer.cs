@@ -52,8 +52,14 @@
         {
             if (_selecting)
             {
-                Clear(Selection);
                 var newSelection = CalculateRectangle(_startLocation, e.Location);
+
+                if (newSelection == Selection)
+                {
+                    return;
+                }
+
+                Clear(Selection);
                 Select(newSelection);
 
                 _selectionCanvas.Invalidate(GetContainingRectangle(Selection, newSelection));
@@ -65,6 +71,7 @@
         {
             using (Graphics g = Graphics.FromImage(_selectionCanvas.Canvas))
             {
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 g.FillRectangle(_overlayBrush, rectangle);
             }
         }
@@ -81,13 +88,14 @@
 
         private void Select(Rectangle rectangle)
         {
-            ControlPaint.DrawReversibleFrame(rectangle, Color.Transparent, FrameStyle.Dashed);
+            //ControlPaint.DrawReversibleFrame(rectangle, Color.Transparent, FrameStyle.Dashed);
 
             using (var transparentBrush = new SolidBrush(Color.Transparent))
             using (Graphics g = Graphics.FromImage(_selectionCanvas.Canvas))
             {
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 g.FillRectangle(transparentBrush, rectangle);
+                ControlPaint.DrawBorder(g, rectangle, Color.Linen, ButtonBorderStyle.Dashed);
             }
         }
 
