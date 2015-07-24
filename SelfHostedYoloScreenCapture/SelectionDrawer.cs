@@ -88,8 +88,6 @@
 
         private void Select(Rectangle rectangle)
         {
-            //ControlPaint.DrawReversibleFrame(rectangle, Color.Transparent, FrameStyle.Dashed);
-
             using (var transparentBrush = new SolidBrush(Color.Transparent))
             using (Graphics g = Graphics.FromImage(_selectionCanvas.Canvas))
             {

@@ -15,6 +15,7 @@
             _uploadPath = uploadPath;
             _serverGetPicturePath = serverGetPicturePath;
             InitializeComponent();
+            CalculateStartingLocalization();
             _progressBar.Style = ProgressBarStyle.Marquee;
             _progressBar.MarqueeAnimationSpeed = 30;
 
@@ -24,6 +25,14 @@
                 Clipboard.SetText(_path.Text);
                 Hide();
             };
+        }
+
+        private void CalculateStartingLocalization()
+        {
+            var desktopRectangle = SystemInformation.VirtualScreen;
+
+            Location = new Point(desktopRectangle.Right - Width, desktopRectangle.Bottom - Height);
+            StartPosition = FormStartPosition.Manual;
         }
 
         public void Upload(Image capturedSelection)
