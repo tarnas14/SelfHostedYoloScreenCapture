@@ -3,7 +3,6 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using System.Windows.Forms.VisualStyles;
     using Configuration;
     using ManagedWinapi;
     using PhotoUploading;
@@ -30,7 +29,7 @@
 
             var configuration = ConfigurationFactory.FromFile<ScreenCaptureConfiguration>("screenCaptureConfig.json");
 
-            var screenCapture = new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.UploadPath, configuration.PictureGetPath), ConfigureCaptureRectangle(configuration));
+            var screenCapture = new ScreenCapture(_trayIcon, new PhotoUploaderPresentingResult(configuration.UploadPath, configuration.PictureGetPath), configuration);
 
             if (SetupGlobalHotkey(configuration.GlobalHotkey, screenCapture))
             {

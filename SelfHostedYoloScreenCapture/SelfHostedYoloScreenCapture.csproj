@@ -69,6 +69,7 @@
     <Compile Include="ActionBox.Designer.cs">
       <DependentUpon>ActionBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\CaptureRectangleFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\HotkeyConfiguration.cs" />

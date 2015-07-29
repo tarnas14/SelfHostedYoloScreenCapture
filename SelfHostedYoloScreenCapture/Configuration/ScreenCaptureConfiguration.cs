@@ -3,7 +3,7 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    class ScreenCaptureConfiguration : Configuration<ScreenCaptureConfiguration>
+    class ScreenCaptureConfiguration : Configuration<ScreenCaptureConfiguration>, CaptureRectangleFactory
     {
         public bool Fullscreen { get; set; }
         public Rectangle CustomCaptureRectangle { get; set; }
@@ -28,6 +28,16 @@
                     }
                 };
             }
+        }
+
+        public Rectangle GetRectangle()
+        {
+            if (Fullscreen)
+            {
+                return SystemInformation.VirtualScreen;
+            }
+
+            return CustomCaptureRectangle;
         }
     }
 }

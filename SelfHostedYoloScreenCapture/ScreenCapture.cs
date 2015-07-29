@@ -3,16 +3,19 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using Configuration;
     using PhotoUploading;
 
     public partial class ScreenCapture : Form
     {
         private SelectionDrawer _selectionDrawer;
         private readonly PhotoUploader _photoUploader;
+        private readonly CaptureRectangleFactory _captureRectangleFactory;
 
-        public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader, Rectangle captureRectangle)
+        public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader, CaptureRectangleFactory captureRectangleFactory)
         {
             _photoUploader = photoUploader;
+            _captureRectangleFactory = captureRectangleFactory;
             InitializeComponent();
 
             SetupIconEvents(trayIcon);
@@ -24,10 +27,6 @@
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.Manual;
 
-            Location = captureRectangle.Location;
-            Size = captureRectangle.Size;
-
-            _canvas.Size = Size;
             SetupCaptureCanvas(_canvas);
             ScreenToCanvas(_canvas);
             SetupActionBox();
@@ -45,7 +44,18 @@
 
         private void SetupCaptureCanvas(PictureBox canvas)
         {
-            _canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            var updatedRectangle = _captureRectangleFactory.GetRectangle();
+
+            if (updatedRectangle.Location == Location && updatedRectangle.Size == Size)
+            {
+                return;
+            }
+
+            Location = updatedRectangle.Location;
+            Size = updatedRectangle.Size;
+
+            canvas.Size = Size;
+            canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
 
             _selectionDrawer = new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
@@ -116,6 +126,7 @@
 
         public void StartNewScreenCapture(object sender, EventArgs e)
         {
+            SetupCaptureCanvas(_canvas);
             ScreenToCanvas(_canvas);
             _selectionDrawer.ResetSelection();
             _actionBox.Hide();
