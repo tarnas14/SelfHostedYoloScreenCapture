@@ -1,5 +1,6 @@
 ﻿namespace SelfHostedYoloScreenCapture.PhotoUploading
 {
+    using System;
     using System.Drawing;
     using System.Net.Http;
     using System.Windows.Forms;
@@ -42,14 +43,24 @@
 
             using (var httpClient = new HttpClient())
             {
-                var httpResponseMessage = httpClient.SendAsync(httpRequestMessage).Result;
+                try
+                {
+                    var httpResponseMessage = httpClient.SendAsync(httpRequestMessage).Result;
 
-                var resultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                    var resultString = httpResponseMessage.Content.ReadAsStringAsync().Result;
 
-                var result = JsonConvert.DeserializeObject<ServerResult>(resultString);
+                    var result = JsonConvert.DeserializeObject<ServerResult>(resultString);
 
-                _path.Text = PutPictureGetPathTogether(_serverGetPicturePath, result.ImageName);
-                _progressBar.Visible = false;
+                    _path.Text = PutPictureGetPathTogether(_serverGetPicturePath, result.ImageName);
+
+                    _progressBar.Visible = false;
+                }
+                catch (Exception exception)
+                {
+                    _progressBar.Visible = false;
+                    _serverError.Visible = true;
+                    Console.WriteLine(exception.Message);
+                }
             }
         }
 
@@ -70,11 +81,6 @@
         struct ServerResult
         {
             public string ImageName { get; set; }
-        }
-
-        private void PhotoUploaderPresentingResult_Load(object sender, System.EventArgs e)
-        {
-
         }
     }
 }
