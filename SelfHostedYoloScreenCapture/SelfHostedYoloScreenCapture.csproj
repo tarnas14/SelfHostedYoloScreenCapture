@@ -75,6 +75,8 @@
     <Compile Include="Configuration\HotkeyConfiguration.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
     <Compile Include="MouseEvents.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="OperationQueue.cs" />
     <Compile Include="Painting\RectangleMouseEvents.cs" />
     <Compile Include="PhotoUploading\FireAndForgetPhotoUploader.cs" />
     <Compile Include="PhotoUploading\PhotoUploader.cs" />
