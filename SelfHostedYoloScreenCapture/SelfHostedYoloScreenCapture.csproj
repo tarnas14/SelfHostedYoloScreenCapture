@@ -74,7 +74,8 @@
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\HotkeyConfiguration.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
-    <Compile Include="Painting\MouseEvents.cs" />
+    <Compile Include="MouseEvents.cs" />
+    <Compile Include="Painting\RectangleMouseEvents.cs" />
     <Compile Include="PhotoUploading\FireAndForgetPhotoUploader.cs" />
     <Compile Include="PhotoUploading\PhotoUploader.cs" />
     <Compile Include="PhotoUploading\PhotoUploaderPresentingResult.cs">

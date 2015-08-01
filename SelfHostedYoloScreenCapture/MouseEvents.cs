@@ -1,4 +1,4 @@
-﻿namespace SelfHostedYoloScreenCapture.Painting
+﻿namespace SelfHostedYoloScreenCapture
 {
     using System.Windows.Forms;
 
