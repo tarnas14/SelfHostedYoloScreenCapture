@@ -4,6 +4,7 @@ namespace SelfHostedYoloScreenCapture
 {
     using System;
     using System.Drawing;
+    using SelectingRectangle;
 
     public partial class ActionBox : UserControl
     {

@@ -5,6 +5,7 @@
     using System.Windows.Forms;
     using Configuration;
     using PhotoUploading;
+    using SelectingRectangle;
 
     public partial class ScreenCapture : Form
     {
@@ -58,7 +59,7 @@
             canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
 
-            _selectionDrawer = new SelectionDrawer(new PictureBoxCanvasDecorator(canvas));
+            _selectionDrawer = new SelectionDrawer(new CanvasFromPictureBox(canvas));
         }
 
         private void SetupActionBox()

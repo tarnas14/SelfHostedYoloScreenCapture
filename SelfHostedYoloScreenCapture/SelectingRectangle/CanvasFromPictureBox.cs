@@ -1,14 +1,13 @@
-﻿namespace SelfHostedYoloScreenCapture
+﻿namespace SelfHostedYoloScreenCapture.SelectingRectangle
 {
-    using System;
     using System.Drawing;
     using System.Windows.Forms;
 
-    class PictureBoxCanvasDecorator : SelectionCanvas
+    class CanvasFromPictureBox : SelectionCanvas
     {
         private readonly PictureBox _pictureBox;
 
-        public PictureBoxCanvasDecorator(PictureBox pictureBox)
+        public CanvasFromPictureBox(PictureBox pictureBox)
         {
             _pictureBox = pictureBox;
         }

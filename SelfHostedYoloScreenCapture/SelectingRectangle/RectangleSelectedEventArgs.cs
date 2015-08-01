@@ -1,4 +1,4 @@
-﻿namespace SelfHostedYoloScreenCapture
+﻿namespace SelfHostedYoloScreenCapture.SelectingRectangle
 {
     using System;
     using System.Drawing;

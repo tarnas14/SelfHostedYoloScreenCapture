@@ -1,4 +1,4 @@
-﻿namespace SelfHostedYoloScreenCapture
+﻿namespace SelfHostedYoloScreenCapture.SelectingRectangle
 {
     using System;
     using System.Drawing;
@@ -10,7 +10,6 @@
         private Point _startLocation;
         private readonly SelectionCanvas _selectionCanvas;
         private SolidBrush _overlayBrush;
-        private int _moveCounter;
 
         public event EventHandler<RectangleSelectedEventArgs> RectangleSelected;
         public event EventHandler NewSelectionStarted;

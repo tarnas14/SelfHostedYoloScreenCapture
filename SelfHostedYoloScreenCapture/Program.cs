@@ -56,7 +56,7 @@
                 hotkey.HotkeyPressed += screenCapture.StartNewScreenCapture;
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("This hotkey is already bound to an action. Change configuration to bind SelfHostedYoloScreenCapture to an available hotkey.","Hotkey taken",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
