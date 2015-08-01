@@ -7,6 +7,7 @@ namespace SelfHostedYoloScreenCapture.Painting
     {
         private readonly Rectangle _rectangle;
         private MouseEventArgs _lastMoveArgs;
+        private bool _isMouseDown;
         public event MouseEventHandler MouseDown;
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseMove;
@@ -28,6 +29,7 @@ namespace SelfHostedYoloScreenCapture.Painting
 
             if (InsideRectangle(e))
             {
+                _isMouseDown = true;
                 MouseDown(sender, e);
             }
         }
@@ -53,16 +55,17 @@ namespace SelfHostedYoloScreenCapture.Painting
                 return;
             }
 
-            if (InsideRectangle(e))
-            {
-                MouseUp(sender, e);
-                return;
-            }
-
-            if (_lastMoveArgs != null)
+            if (!InsideRectangle(e) && _isMouseDown && _lastMoveArgs != null)
             {
                 MouseUp(sender, _lastMoveArgs);
             }
+
+            if (InsideRectangle(e))
+            {
+                MouseUp(sender, e);
+            }
+
+            _isMouseDown = false;
         }
 
         private bool InsideRectangle(MouseEventArgs mouseEventArgs)

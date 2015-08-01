@@ -49,9 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PaintingTests\MouseEventsInsideRectangleTests.cs" />
-    <Compile Include="PaintingTests\MouseEventsMock.cs" />
-    <Compile Include="PaintingTests\MouseEventsTester.cs" />
+    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsInsideRectangleTests.cs" />
+    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsMock.cs" />
+    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
