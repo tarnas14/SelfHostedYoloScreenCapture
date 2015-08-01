@@ -9,54 +9,67 @@
     class MouseEventsInsideRectangleTests
     {
         private MouseEventsMock _unfilteredMouseEvents;
-        private Rectangle _rectangle;
         private MouseEventsTester _rectangleEventsTester;
+        private MouseEventArgs _insideRectangle;
+        private MouseEventArgs _outsideRectangle;
 
         [SetUp]
         public void Setup()
         {
             _unfilteredMouseEvents = new MouseEventsMock();
-            _rectangle = new Rectangle(new Point(10, 10), new Size(10, 10));
-            var rectangleMouseEvents = new RectangleMouseEvents(_rectangle, _unfilteredMouseEvents);
+            var rectangle = new Rectangle(new Point(10, 10), new Size(10, 10));
+            _insideRectangle = new MouseEventArgs(MouseButtons.Left, 1, 11, 11, 0);
+            _outsideRectangle = new MouseEventArgs(MouseButtons.Left, 1, 24, 13, 0);
+            var rectangleMouseEvents = new RectangleMouseEvents(rectangle, _unfilteredMouseEvents);
             _rectangleEventsTester = new MouseEventsTester(rectangleMouseEvents);
         }
 
         [Test]
         public void ShouldPassMouseEventsInsideRectangleUnchanged()
         {
-            //given
-            var mouseDownArgsInsideRectangle = new MouseEventArgs(MouseButtons.Left,  1, 11, 11, 0);
-            var mouseMoveArgsInsideRectangle = new MouseEventArgs(MouseButtons.Left, 1,  13,  13,  0);
-            var mouseUpArgsInsideRectangle = new MouseEventArgs(MouseButtons.Left, 1,  12, 12, 0);
-
             //when
-            _unfilteredMouseEvents.DoMouseDown(mouseDownArgsInsideRectangle);
-            _unfilteredMouseEvents.DoMouseMove(mouseMoveArgsInsideRectangle);
-            _unfilteredMouseEvents.DoMouseUp(mouseUpArgsInsideRectangle);
+            _unfilteredMouseEvents.DoMouseDown(_insideRectangle);
+            _unfilteredMouseEvents.DoMouseMove(_insideRectangle);
+            _unfilteredMouseEvents.DoMouseUp(_insideRectangle);
 
             //then
-            Assert.That(_rectangleEventsTester.MouseDownArgs.Single(), Is.EqualTo(mouseDownArgsInsideRectangle));
-            Assert.That(_rectangleEventsTester.MouseMoveArgs.Single(), Is.EqualTo(mouseMoveArgsInsideRectangle));
-            Assert.That(_rectangleEventsTester.MouseUpArgs.Single(), Is.EqualTo(mouseUpArgsInsideRectangle));
+            Assert.That(_rectangleEventsTester.MouseDownArgs.Single(), Is.EqualTo(_insideRectangle));
+            Assert.That(_rectangleEventsTester.MouseMoveArgs.Single(), Is.EqualTo(_insideRectangle));
+            Assert.That(_rectangleEventsTester.MouseUpArgs.Single(), Is.EqualTo(_insideRectangle));
         }
 
         [Test]
-        public void ShouldNotPassMouseEventsOutsideRectangle()
+        public void ShouldNotPassMouseMoveDownEventsOutsideRectangle()
         {
-            //given
-            var mouseDownArgsOutsideRectangle = new MouseEventArgs(MouseButtons.Left, 1, 8, 10, 0);
-            var mouseMoveArgsOutsideRectangle = new MouseEventArgs(MouseButtons.Left, 1, 24, 13, 0);
-            var mouseUpArgsOutsideRectangle = new MouseEventArgs(MouseButtons.Left, 1, 44, 3, 0);
-
             //when
-            _unfilteredMouseEvents.DoMouseDown(mouseDownArgsOutsideRectangle);
-            _unfilteredMouseEvents.DoMouseMove(mouseMoveArgsOutsideRectangle);
-            _unfilteredMouseEvents.DoMouseUp(mouseUpArgsOutsideRectangle);
+            _unfilteredMouseEvents.DoMouseDown(_outsideRectangle);
+            _unfilteredMouseEvents.DoMouseMove(_outsideRectangle);
 
             //then
             Assert.That(_rectangleEventsTester.MouseDownArgs, Is.Empty);
             Assert.That(_rectangleEventsTester.MouseMoveArgs, Is.Empty);
+        }
+
+        [Test]
+        public void ShouldNotPassMouseUpEventsOutsideRectangleIfThereWasNoMoveInside()
+        {
+            //when
+            _unfilteredMouseEvents.DoMouseUp(_outsideRectangle);
+
+            //then
             Assert.That(_rectangleEventsTester.MouseUpArgs, Is.Empty);
+        }
+
+        [Test]
+        public void ShouldPassMouseUpEventsOutsideRectangleAfterMoveInsideWithLastMoveArgs()
+        {
+            //when
+            _unfilteredMouseEvents.DoMouseMove(_insideRectangle);
+            _unfilteredMouseEvents.DoMouseUp(_outsideRectangle);
+
+            //then
+            Assert.That(_rectangleEventsTester.MouseMoveArgs.Single(), Is.EqualTo(_insideRectangle));
+            Assert.That(_rectangleEventsTester.MouseUpArgs.Single(), Is.EqualTo(_insideRectangle));
         }
     }
 }

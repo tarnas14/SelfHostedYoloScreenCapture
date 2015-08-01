@@ -6,6 +6,7 @@ namespace SelfHostedYoloScreenCapture.Painting
     public class RectangleMouseEvents : MouseEvents
     {
         private readonly Rectangle _rectangle;
+        private MouseEventArgs _lastMoveArgs;
         public event MouseEventHandler MouseDown;
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseMove;
@@ -40,6 +41,7 @@ namespace SelfHostedYoloScreenCapture.Painting
 
             if (InsideRectangle(e))
             {
+                _lastMoveArgs = e;
                 MouseMove(sender, e);
             }
         }
@@ -54,6 +56,12 @@ namespace SelfHostedYoloScreenCapture.Painting
             if (InsideRectangle(e))
             {
                 MouseUp(sender, e);
+                return;
+            }
+
+            if (_lastMoveArgs != null)
+            {
+                MouseUp(sender, _lastMoveArgs);
             }
         }
 
