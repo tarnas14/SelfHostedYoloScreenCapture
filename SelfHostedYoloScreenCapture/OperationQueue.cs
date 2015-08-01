@@ -32,12 +32,22 @@ namespace SelfHostedYoloScreenCapture
 
         public void Back()
         {
+            if (_currentIndex == -1)
+            {
+                return;
+            }
+
             CurrentOperation.Undo();
             _currentIndex--;
         }
 
         public void Forward()
         {
+            if (_currentIndex == _operations.Count - 1)
+            {
+                return;
+            }
+
             _currentIndex++;
             CurrentOperation.Do();
         }

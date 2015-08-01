@@ -7,26 +7,27 @@
     class OpertionQueueTests
     {
         private OperationQueue _queue;
+        private Operation _operation;
 
         [SetUp]
         public void Setup()
         {
             _queue = new OperationQueue();
+            _operation = A.Fake<Operation>();
         }
 
         [Test]
         public void ShouldExecuteEachAddedOperation()
         {
             //given
-            var operation = A.Fake<Operation>();
             var anotherOperation = A.Fake<Operation>();
 
             //when
-            _queue.Execute(operation);
+            _queue.Execute(_operation);
             _queue.Execute(anotherOperation);
 
             //then
-            A.CallTo(() => operation.Do()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _operation.Do()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => anotherOperation.Do()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -34,23 +35,20 @@
         public void ShouldUndoOperationWhenBackingInQueue()
         {
             //given
-            var operation = A.Fake<Operation>();
-            _queue.Execute(operation);
+            _queue.Execute(_operation);
 
             //when
             _queue.Back();
 
             //then
-            A.CallTo(() => operation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _operation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
         public void ShouldUndoAndRedoOperation()
         {
             //given
-            var firstOperation = A.Fake<Operation>();
-
-            _queue.Execute(firstOperation);
+            _queue.Execute(_operation);
 
             _queue.Back();
 
@@ -58,8 +56,8 @@
             _queue.Forward();
 
             //then
-            A.CallTo(() => firstOperation.Do()).MustHaveHappened(Repeated.Exactly.Twice);
-            A.CallTo(() => firstOperation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _operation.Do()).MustHaveHappened(Repeated.Exactly.Twice);
+            A.CallTo(() => _operation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -91,6 +89,35 @@
             _queue.Forward();
             A.CallTo(() => secondOperation.Do()).MustHaveHappened(Repeated.Exactly.Twice);
             A.CallTo(() => secondOperation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void BackingTooMuchShouldBeANoOp()
+        {
+            //given
+            _queue.Execute(_operation);
+            _queue.Back();
+
+            //when
+            _queue.Back();
+
+            //then
+            A.CallTo(() => _operation.Do()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _operation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void ForwardingTooMuchShouldBeANoOp()
+        {
+            //given
+            _queue.Execute(_operation);
+
+            //when
+            _queue.Forward();
+
+            //then
+            A.CallTo(() => _operation.Do()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _operation.Undo()).MustHaveHappened(Repeated.Never);
         }
     }
 }
