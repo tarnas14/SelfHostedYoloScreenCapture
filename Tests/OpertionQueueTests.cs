@@ -119,5 +119,28 @@
             A.CallTo(() => _operation.Do()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => _operation.Undo()).MustHaveHappened(Repeated.Never);
         }
+
+        [Test]
+        public void ExecutingOperationWhenQueueIsBackedShouldOverwriteOperationsAfterCurrent()
+        {
+            //given
+            var firstOperation = A.Fake<Operation>();
+            var secondOperation = A.Fake<Operation>();
+
+            _queue.Execute(firstOperation);
+            _queue.Back();
+
+            //when
+            _queue.Execute(secondOperation);
+            _queue.Back();
+            _queue.Forward();
+
+            //then
+            A.CallTo(() => firstOperation.Do()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => firstOperation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => secondOperation.Do()).MustHaveHappened(Repeated.Exactly.Twice);
+            A.CallTo(() => secondOperation.Undo()).MustHaveHappened(Repeated.Exactly.Once);
+        }
     }
 }

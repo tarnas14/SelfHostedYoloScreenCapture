@@ -1,6 +1,7 @@
 namespace SelfHostedYoloScreenCapture
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class OperationQueue
     {
@@ -26,6 +27,16 @@ namespace SelfHostedYoloScreenCapture
 
         private void Add(Operation operation)
         {
+            if (_currentIndex != _operations.Count - 1)
+            {
+                var operationsToRemove = _operations.Skip(_currentIndex + 1).ToList();
+
+                foreach (var operationToRemove in operationsToRemove)
+                {
+                    _operations.Remove(operationToRemove);
+                }
+            }
+
             _operations.Add(operation);
             _currentIndex++;
         }
