@@ -3,6 +3,7 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using Painting;
 
     public class SelectionDrawer
     {
@@ -51,7 +52,7 @@
         {
             if (_selecting)
             {
-                var newSelection = CalculateRectangle(_startLocation, e.Location);
+                var newSelection = StaticHelper.GetRectangle(_startLocation, e.Location);
 
                 if (newSelection == Selection)
                 {
@@ -73,16 +74,6 @@
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 g.FillRectangle(_overlayBrush, rectangle);
             }
-        }
-
-        private Rectangle CalculateRectangle(Point startLocation, Point endLocation)
-        {
-            var startX = Math.Min(startLocation.X, endLocation.X);
-            var startY = Math.Min(startLocation.Y, endLocation.Y);
-            var endX = Math.Max(startLocation.X, endLocation.X);
-            var endY = Math.Max(startLocation.Y, endLocation.Y);
-
-            return new Rectangle(new Point(startX, startY), new Size(endX - startX, endY - startY));
         }
 
         private void Select(Rectangle rectangle)
