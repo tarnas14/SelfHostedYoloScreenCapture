@@ -4,29 +4,29 @@ namespace SelfHostedYoloScreenCapture.SelectingRectangle
 
     internal class ControlMouseEvents : MouseEvents
     {
-        private readonly PictureBox _pictureBox;
+        private readonly Control _control;
 
-        public ControlMouseEvents(PictureBox pictureBox)
+        public ControlMouseEvents(Control control)
         {
-            _pictureBox = pictureBox;
+            _control = control;
         }
 
         public event MouseEventHandler MouseDown
         {
-            add { _pictureBox.MouseDown += value; }
-            remove { _pictureBox.MouseDown -= value; }
+            add { _control.MouseDown += value; }
+            remove { _control.MouseDown -= value; }
         }
 
         public event MouseEventHandler MouseUp
         {
-            add { _pictureBox.MouseUp += value; }
-            remove { _pictureBox.MouseUp -= value; }
+            add { _control.MouseUp += value; }
+            remove { _control.MouseUp -= value; }
         }
 
         public event MouseEventHandler MouseMove
         {
-            add { _pictureBox.MouseMove += value; }
-            remove { _pictureBox.MouseMove -= value; }
+            add { _control.MouseMove += value; }
+            remove { _control.MouseMove -= value; }
         }
     }
 }

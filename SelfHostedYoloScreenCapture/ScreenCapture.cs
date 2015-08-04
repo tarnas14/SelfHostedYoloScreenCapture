@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
     using Configuration;
+    using Painting;
     using PhotoUploading;
     using SelectingRectangle;
 
@@ -59,7 +60,9 @@
             canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
 
-            _selectionDrawer = new SelectionDrawer(new CanvasFromPictureBox(canvas), new ControlMouseEvents(canvas));
+            var pictureBoxCanvas = new CanvasFromPictureBox(canvas);
+            var pictureBoxMouseEvents = new ControlMouseEvents(canvas);
+            _selectionDrawer = new SelectionDrawer(pictureBoxCanvas, pictureBoxMouseEvents);
         }
 
         private void SetupActionBox()
