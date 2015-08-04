@@ -64,7 +64,7 @@
 
         private void SetupActionBox()
         {
-            _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
+            _selectionDrawer. RectangleSelected += _actionBox.DrawCloseTo;
             _selectionDrawer.NewSelectionStarted += _actionBox.HideActions;
             _actionBox.Upload += UploadSelection;
         }
