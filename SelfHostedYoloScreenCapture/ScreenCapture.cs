@@ -59,7 +59,7 @@
             canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
 
-            _selectionDrawer = new SelectionDrawer(new CanvasFromPictureBox(canvas));
+            _selectionDrawer = new SelectionDrawer(new CanvasFromPictureBox(canvas), new ControlMouseEvents(canvas));
         }
 
         private void SetupActionBox()

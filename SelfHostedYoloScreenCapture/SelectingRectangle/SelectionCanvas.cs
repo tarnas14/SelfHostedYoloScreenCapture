@@ -2,7 +2,7 @@
 {
     using System.Drawing;
 
-    public interface SelectionCanvas : MouseEvents
+    public interface SelectionCanvas
     {
         Image Canvas { get; }
         void Invalidate();

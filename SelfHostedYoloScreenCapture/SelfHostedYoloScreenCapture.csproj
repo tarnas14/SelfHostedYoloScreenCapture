@@ -74,6 +74,7 @@
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\HotkeyConfiguration.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
+    <Compile Include="SelectingRectangle\ControlMouseEvents.cs" />
     <Compile Include="MouseEvents.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="OperationQueue.cs" />

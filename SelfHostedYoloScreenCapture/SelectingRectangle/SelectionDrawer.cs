@@ -17,12 +17,12 @@
 
         public Rectangle Selection { get; private set; }
 
-        public SelectionDrawer(SelectionCanvas selectionCanvas)
+        public SelectionDrawer(SelectionCanvas selectionCanvas, MouseEvents mouseEvents)
         {
             _selectionCanvas = selectionCanvas;
-            selectionCanvas.MouseDown += OnMouseDown;
-            selectionCanvas.MouseMove += OnMouseMove;
-            selectionCanvas.MouseUp += OnMouseUp;
+            mouseEvents.MouseDown += OnMouseDown;
+            mouseEvents.MouseMove += OnMouseMove;
+            mouseEvents.MouseUp += OnMouseUp;
 
             PrepareOverlay();
         }

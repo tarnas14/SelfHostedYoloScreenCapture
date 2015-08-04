@@ -12,24 +12,6 @@
             _pictureBox = pictureBox;
         }
 
-        public event MouseEventHandler MouseDown
-        {
-            add { _pictureBox.MouseDown += value; }
-            remove { _pictureBox.MouseDown -= value; }
-        }
-
-        public event MouseEventHandler MouseUp
-        {
-            add { _pictureBox.MouseUp += value; }
-            remove { _pictureBox.MouseUp -= value; }
-        }
-
-        public event MouseEventHandler MouseMove
-        {
-            add { _pictureBox.MouseMove += value; }
-            remove { _pictureBox.MouseMove -= value; }
-        }
-
         public Image Canvas
         {
             get { return _pictureBox.Image; }
