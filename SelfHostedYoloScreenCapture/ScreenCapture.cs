@@ -63,6 +63,7 @@
             var pictureBoxCanvas = new CanvasFromPictureBox(canvas);
             var pictureBoxMouseEvents = new ControlMouseEvents(canvas);
             _selectionDrawer = new SelectionDrawer(pictureBoxCanvas, pictureBoxMouseEvents);
+            new DrawingMagic(pictureBoxCanvas, new RectangleMouseEvents(_selectionDrawer, pictureBoxMouseEvents), new OperationQueue());
         }
 
         private void SetupActionBox()

@@ -5,16 +5,20 @@ namespace SelfHostedYoloScreenCapture.Painting
 
     public class RectangleMouseEvents : MouseEvents
     {
-        private readonly Rectangle _rectangle;
+        private Rectangle _rectangle;
         private MouseEventArgs _lastMoveArgs;
         private bool _isMouseDown;
         public event MouseEventHandler MouseDown;
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseMove;
 
-        public RectangleMouseEvents(Rectangle rectangle, MouseEvents mouseEvents)
+        public RectangleMouseEvents(SelectionProviderThingie selectionProvider, MouseEvents mouseEvents)
         {
-            _rectangle = rectangle;
+            selectionProvider.RectangleSelected += (sender, args) =>
+            {
+                _rectangle = args.Selection;
+            };
+
             mouseEvents.MouseDown += FilterMouseDown;
             mouseEvents.MouseMove += FilterMouseMove;
             mouseEvents.MouseUp += FilterMouseUp;

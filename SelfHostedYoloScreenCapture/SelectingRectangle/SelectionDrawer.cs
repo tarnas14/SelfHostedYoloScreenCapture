@@ -5,7 +5,7 @@
     using System.Windows.Forms;
     using Painting;
 
-    public class SelectionDrawer
+    public class SelectionDrawer : SelectionProviderThingie
     {
         private bool _selecting;
         private Point _startLocation;
