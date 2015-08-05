@@ -1,5 +1,6 @@
 ﻿namespace SelfHostedYoloScreenCapture.Painting
 {
+    using System;
     using System.Drawing;
     using System.Windows.Forms;
     using SelectingRectangle;
@@ -12,6 +13,7 @@
         private bool _workingMagic;
         private Point _start;
         private readonly OperationQueue _operationQueue;
+        public event EventHandler OperationFinished;
 
         public DrawingMagic(SelectionCanvas canvas, MouseEvents mouseEvents, OperationQueue operationQueue)
         {
@@ -48,12 +50,19 @@
             _workingMagic = false;
             _operationQueue.Execute(_currentTool.GetUndoableOperation(_cache, _start, e.Location));
             CommitCache();
+
+            if (OperationFinished != null)
+            {
+                OperationFinished(this, EventArgs.Empty);
+            }
         }
 
         private void CommitCache()
         {
             using (var g = Graphics.FromImage(_canvas.Canvas))
             {
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                g.FillRectangle(new SolidBrush(Color.Transparent), new Rectangle(new Point(0,0), _canvas.Canvas.Size));
                 g.DrawImage(_cache, new Point(0,0));
                 _canvas.Invalidate();
             }
@@ -69,38 +78,15 @@
                 g.DrawImage(_canvas.Canvas, canvasRectangle, canvasRectangle, GraphicsUnit.Pixel);
             }
         }
-    }
 
-    internal interface Tool
-    {
-        Operation GetUndoableOperation(Image canvas, Point start, Point end);
-        void DrawOn(SelectionCanvas canvas, Point start, Point end);
-    }
-
-    internal class NullTool : Tool
-    {
-        public Operation GetUndoableOperation(Image canvas, Point start, Point end)
+        public void SetTool(Tool tool)
         {
-            //I refuse to do anything
-            return new NullOperation();
-        }
+            if (_workingMagic)
+            {
+                return;
+            }
 
-        public void DrawOn(SelectionCanvas canvas, Point start, Point end)
-        {
-            //I refuse to do anything
-        }
-    }
-
-    internal class NullOperation : Operation
-    {
-        public void Do()
-        {
-            //I refuse to do anything
-        }
-
-        public void Undo()
-        {
-            //I refuse to do anything
+            _currentTool = tool;
         }
     }
 }

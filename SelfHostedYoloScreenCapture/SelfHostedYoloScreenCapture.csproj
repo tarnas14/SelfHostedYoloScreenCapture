@@ -74,7 +74,11 @@
     <Compile Include="Configuration\ConfigurationFactory.cs" />
     <Compile Include="Configuration\HotkeyConfiguration.cs" />
     <Compile Include="Configuration\ScreenCaptureConfiguration.cs" />
+    <Compile Include="Painting\NullOperation.cs" />
+    <Compile Include="Painting\NullTool.cs" />
+    <Compile Include="Painting\OnOffMouseEvents.cs" />
     <Compile Include="Painting\SelectionProviderThingie.cs" />
+    <Compile Include="Painting\Tool.cs" />
     <Compile Include="SelectingRectangle\ControlMouseEvents.cs" />
     <Compile Include="MouseEvents.cs" />
     <Compile Include="Operation.cs" />
@@ -103,6 +107,7 @@
     </Compile>
     <Compile Include="SelectingRectangle\SelectionCanvas.cs" />
     <Compile Include="SelectingRectangle\SelectionDrawer.cs" />
+    <Compile Include="ToolSelectedEventArgs.cs" />
     <Compile Include="TrayIcon.cs" />
     <EmbeddedResource Include="ActionBox.resx">
       <DependentUpon>ActionBox.cs</DependentUpon>

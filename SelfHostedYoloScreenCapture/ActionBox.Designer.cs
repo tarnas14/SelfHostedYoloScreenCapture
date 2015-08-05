@@ -29,24 +29,35 @@
         private void InitializeComponent()
         {
             this._upload = new System.Windows.Forms.Button();
+            this._testButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _upload
             // 
-            this._upload.Location = new System.Drawing.Point(0, 0);
+            this._upload.Location = new System.Drawing.Point(31, 0);
             this._upload.Name = "_upload";
             this._upload.Size = new System.Drawing.Size(33, 23);
             this._upload.TabIndex = 0;
             this._upload.Text = "Up";
             this._upload.UseVisualStyleBackColor = true;
             // 
+            // _testButton
+            // 
+            this._testButton.Location = new System.Drawing.Point(0, 0);
+            this._testButton.Name = "_testButton";
+            this._testButton.Size = new System.Drawing.Size(30, 23);
+            this._testButton.TabIndex = 1;
+            this._testButton.Text = "T";
+            this._testButton.UseVisualStyleBackColor = true;
+            // 
             // ActionBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._testButton);
             this.Controls.Add(this._upload);
             this.Name = "ActionBox";
-            this.Size = new System.Drawing.Size(33, 23);
+            this.Size = new System.Drawing.Size(65, 22);
             this.ResumeLayout(false);
 
         }
@@ -54,5 +65,6 @@
         #endregion
 
         private System.Windows.Forms.Button _upload;
+        private System.Windows.Forms.Button _testButton;
     }
 }

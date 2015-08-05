@@ -13,6 +13,9 @@
         private SelectionDrawer _selectionDrawer;
         private readonly PhotoUploader _photoUploader;
         private readonly CaptureRectangleFactory _captureRectangleFactory;
+        private DrawingMagic _drawingMagic;
+        private OnOffMouseEvents _onOffSelectionMouseEvents;
+        private OnOffMouseEvents _onOffDrawingMouseEvents;
 
         public ScreenCapture(TrayIcon trayIcon, PhotoUploader photoUploader, CaptureRectangleFactory captureRectangleFactory)
         {
@@ -62,15 +65,34 @@
 
             var pictureBoxCanvas = new CanvasFromPictureBox(canvas);
             var pictureBoxMouseEvents = new ControlMouseEvents(canvas);
-            _selectionDrawer = new SelectionDrawer(pictureBoxCanvas, pictureBoxMouseEvents);
-            new DrawingMagic(pictureBoxCanvas, new RectangleMouseEvents(_selectionDrawer, pictureBoxMouseEvents), new OperationQueue());
+            _onOffSelectionMouseEvents = new OnOffMouseEvents(pictureBoxMouseEvents)
+            {
+                On = true
+            };
+            _selectionDrawer = new SelectionDrawer(pictureBoxCanvas, _onOffSelectionMouseEvents);
+            _onOffDrawingMouseEvents = new OnOffMouseEvents(new RectangleMouseEvents(_selectionDrawer, pictureBoxMouseEvents))
+            {
+                On = false
+            };
+            _drawingMagic = new DrawingMagic(pictureBoxCanvas, _onOffDrawingMouseEvents, new OperationQueue());
+            _selectionDrawer.RectangleSelected += (sender, args) => _drawingMagic.UpdateCache(sender, args);
+            _drawingMagic.OperationFinished += (sender, args) => { 
+                _onOffSelectionMouseEvents.On = true;
+                _onOffDrawingMouseEvents.On = false;
+            };
         }
 
         private void SetupActionBox()
         {
-            _selectionDrawer. RectangleSelected += _actionBox.DrawCloseTo;
+            _selectionDrawer.RectangleSelected += _actionBox.DrawCloseTo;
             _selectionDrawer.NewSelectionStarted += _actionBox.HideActions;
             _actionBox.Upload += UploadSelection;
+            _actionBox.ToolSelected += (sender, toolSelectedEventArgs) =>
+            {
+                _onOffSelectionMouseEvents.On = false;
+                _drawingMagic.SetTool(toolSelectedEventArgs.Tool);
+                _onOffDrawingMouseEvents.On = true;
+            };
         }
 
         private void UploadSelection(object sender, EventArgs e)

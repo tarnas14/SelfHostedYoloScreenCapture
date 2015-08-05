@@ -49,7 +49,6 @@
             // 
             this._actionBox.Location = new System.Drawing.Point(12, 12);
             this._actionBox.Name = "_actionBox";
-            this._actionBox.Size = new System.Drawing.Size(33, 23);
             this._actionBox.TabIndex = 1;
             this._actionBox.Visible = false;
             // 
