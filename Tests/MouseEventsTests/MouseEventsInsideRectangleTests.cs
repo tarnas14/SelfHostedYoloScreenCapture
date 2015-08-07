@@ -1,4 +1,4 @@
-﻿namespace Tests.PaintingTests
+﻿namespace Tests.MouseEventsTests
 {
     using System.Drawing;
     using System.Linq;

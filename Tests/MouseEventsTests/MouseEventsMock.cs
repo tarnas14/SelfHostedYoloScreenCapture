@@ -1,8 +1,7 @@
-﻿namespace Tests.PaintingTests
+﻿namespace Tests.MouseEventsTests
 {
     using System.Windows.Forms;
     using SelfHostedYoloScreenCapture;
-    using SelfHostedYoloScreenCapture.Painting;
 
     class MouseEventsMock : MouseEvents
     {

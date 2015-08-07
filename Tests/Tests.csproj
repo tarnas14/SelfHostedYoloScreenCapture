@@ -50,9 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsInsideRectangleTests.cs" />
-    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsMock.cs" />
-    <Compile Include="MouseEventsRectangleFilterTests\MouseEventsTester.cs" />
+    <Compile Include="MouseEventsTests\ChainOfResponsibilityTests.cs" />
+    <Compile Include="MouseEventsTests\ToolDrawingInsideSelectionChainLinkTests.cs" />
+    <Compile Include="MouseEventsTests\MouseEventsInsideRectangleTests.cs" />
+    <Compile Include="MouseEventsTests\MouseEventsMock.cs" />
+    <Compile Include="MouseEventsTests\MouseEventsTester.cs" />
     <Compile Include="OpertionQueueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -65,6 +67,7 @@
       <Name>SelfHostedYoloScreenCapture</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

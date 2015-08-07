@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Tests.PaintingTests
+﻿namespace Tests.MouseEventsTests
 {
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Forms;
     using SelfHostedYoloScreenCapture;
-    using SelfHostedYoloScreenCapture.Painting;
 
     class MouseEventsTester
     {
