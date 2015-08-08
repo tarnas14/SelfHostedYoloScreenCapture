@@ -77,8 +77,10 @@
     <Compile Include="Painting\NullOperation.cs" />
     <Compile Include="Painting\NullTool.cs" />
     <Compile Include="Painting\OnOffMouseEvents.cs" />
+    <Compile Include="Painting\ResponsibilityChainLink.cs" />
     <Compile Include="Painting\SelectionProviderThingie.cs" />
     <Compile Include="Painting\Tool.cs" />
+    <Compile Include="Painting\ToolDrawingInsideSelectionChainLink.cs" />
     <Compile Include="SelectingRectangle\ControlMouseEvents.cs" />
     <Compile Include="MouseEvents.cs" />
     <Compile Include="Operation.cs" />

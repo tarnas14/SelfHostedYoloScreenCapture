@@ -1,11 +1,11 @@
 ﻿namespace Tests.MouseEventsTests
 {
+    using System;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
     using FakeItEasy;
     using NUnit.Framework;
-    using SelfHostedYoloScreenCapture;
     using SelfHostedYoloScreenCapture.Painting;
     using SelfHostedYoloScreenCapture.SelectingRectangle;
 
@@ -40,6 +40,11 @@
             });
         }
 
+        private void DeselectSelection()
+        {
+            _selectionProvider.NewSelectionStarted += Raise.With(this, EventArgs.Empty);
+        }
+
         [Test]
         public void ShouldCallNextLinkIfSelectionHasNotBeenSelected()
         {
@@ -56,6 +61,33 @@
             A.CallTo(() => _nextLink.DoMouseDown(_sender, _insideRectangle)).MustHaveHappened();
             A.CallTo(() => _nextLink.DoMouseMove(_sender, _insideRectangle)).MustHaveHappened();
             A.CallTo(() => _nextLink.DoMouseUp(_sender, _insideRectangle)).MustHaveHappened();
+        }
+
+        [Test]
+        public void ShouldCallNextLinkIfSelectionHasBeenCancelled()
+        {
+            //given
+            SelectSelection();
+
+            //when
+            _toolDrawingInsideSelectionChainLink.DoMouseDown(_sender, _insideRectangle);
+            _toolDrawingInsideSelectionChainLink.DoMouseMove(_sender, _insideRectangle);
+            _toolDrawingInsideSelectionChainLink.DoMouseUp(_sender, _insideRectangle);
+
+            DeselectSelection();
+
+            _toolDrawingInsideSelectionChainLink.DoMouseDown(_sender, _insideRectangle);
+            _toolDrawingInsideSelectionChainLink.DoMouseMove(_sender, _insideRectangle);
+            _toolDrawingInsideSelectionChainLink.DoMouseUp(_sender, _insideRectangle);
+
+            //then
+            Assert.That(_toolEventsTester.MouseDownArgs.Single(), Is.EqualTo(_insideRectangle));
+            Assert.That(_toolEventsTester.MouseMoveArgs.Single(), Is.EqualTo(_insideRectangle));
+            Assert.That(_toolEventsTester.MouseUpArgs.Single(), Is.EqualTo(_insideRectangle));
+
+            A.CallTo(() => _nextLink.DoMouseDown(_sender, _insideRectangle)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _nextLink.DoMouseMove(_sender, _insideRectangle)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _nextLink.DoMouseUp(_sender, _insideRectangle)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -151,96 +183,6 @@
 
             A.CallTo(() => _nextLink.DoMouseDown(_sender, _outsideRectangle)).MustHaveHappened();
             A.CallTo(() => _nextLink.DoMouseUp(_sender, _outsideRectangle)).MustHaveHappened();
-        }
-    }
-
-    public interface ResponsibilityChainLink
-    {
-        void DoMouseDown(object sender, MouseEventArgs args);
-        void DoMouseMove(object sender, MouseEventArgs args);
-        void DoMouseUp(object sender, MouseEventArgs args);
-    }
-
-    internal class ToolDrawingInsideSelectionChainLink : MouseEvents
-    {
-        private readonly ResponsibilityChainLink _nextLink;
-        public event MouseEventHandler MouseDown;
-        public event MouseEventHandler MouseUp;
-        public event MouseEventHandler MouseMove;
-        private Rectangle _rectangle;
-        private bool _isMouseDownInsideRectangle;
-        private MouseEventArgs _lastMoveArgs;
-
-        public ToolDrawingInsideSelectionChainLink(SelectionProviderThingie selectionProviderThingie, ResponsibilityChainLink nextLink)
-        {
-            _nextLink = nextLink;
-            selectionProviderThingie.RectangleSelected += (sender, args) => { _rectangle = args.Selection; };
-        }
-
-        public void DoMouseDown(object sender, MouseEventArgs args)
-        {
-            if (!InsideRectangle(args))
-            {
-                _nextLink.DoMouseDown(sender, args);
-                return;
-            }
-
-            if (MouseDown == null)
-            {
-                return;
-            }
-
-            MouseDown(sender, args);
-            _isMouseDownInsideRectangle = true;
-        }
-
-        public void DoMouseMove(object sender, MouseEventArgs args)
-        {
-            if (!InsideRectangle(args))
-            {
-                _nextLink.DoMouseMove(sender, args);
-                return;
-            }
-
-            if (MouseMove == null)
-            {
-                return;
-            }
-
-            _lastMoveArgs = args;
-            MouseMove(sender, args);
-        }
-
-        public void DoMouseUp(object sender, MouseEventArgs args)
-        {
-            if (MouseUp == null)
-            {
-                return;
-            }
-
-            if (InsideRectangle(args))
-            {
-                MouseUp(sender, args);
-                return;
-            }
-
-            if (_isMouseDownInsideRectangle && _lastMoveArgs != null && !InsideRectangle(args))
-            {
-                MouseUp(sender, _lastMoveArgs);
-                _isMouseDownInsideRectangle = false;
-                _lastMoveArgs = null;
-                return;
-            }
-
-            _nextLink.DoMouseUp(sender, args);
-        }
-
-        private bool InsideRectangle(MouseEventArgs mouseEventArgs)
-        {
-            var xInsideRectangle = mouseEventArgs.X >= _rectangle.Left && mouseEventArgs.X <= _rectangle.Right;
-            var yInsideRectangle = mouseEventArgs.Y >= _rectangle.Top && mouseEventArgs.Y <= _rectangle.Bottom;
-
-            return xInsideRectangle && yInsideRectangle;
         }
     }
 }
