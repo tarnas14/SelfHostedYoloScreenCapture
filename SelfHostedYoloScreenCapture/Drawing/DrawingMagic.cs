@@ -11,6 +11,7 @@
         private Image _cache;
         private bool _workingMagic;
         private Point _start;
+        private Rectangle _lastWorkspace;
         public event EventHandler OperationFinished;
 
         public DrawingMagic(SelectionCanvas canvas, MouseEvents mouseEvents)
@@ -39,6 +40,18 @@
                 return;
             }
 
+            var lineEnd = e.Location;
+            var workspaceRectangle = StaticHelper.GetRectangle(_start, lineEnd);
+
+            using (var pen = new Pen(new SolidBrush(Color.Red)))
+            using (var canvasGraphics = Graphics.FromImage(_canvas.Canvas))
+            {
+                canvasGraphics.DrawImage(_cache, new Rectangle(Point.Empty, _canvas.Canvas.Size));
+                canvasGraphics.DrawLine(pen, _start, lineEnd);
+                _canvas.Invalidate();
+            }
+
+            _lastWorkspace = workspaceRectangle;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -48,8 +61,20 @@
                 return;
             }
 
-            _workingMagic = false;
+            var lineEnd = e.Location;
+
+            using (var pen = new Pen(new SolidBrush(Color.Red)))
+            using (var cacheGraphics = Graphics.FromImage(_cache))
+            {
+                cacheGraphics.DrawImage(_cache, new Rectangle(Point.Empty, _cache.Size));
+                cacheGraphics.DrawLine(pen, _start, lineEnd);
+                _canvas.Invalidate();
+            }
+
             CommitCache();
+
+            _lastWorkspace = new Rectangle();
+            _workingMagic = false;
 
             if (OperationFinished != null)
             {
