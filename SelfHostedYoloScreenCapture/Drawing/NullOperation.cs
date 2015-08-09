@@ -1,4 +1,4 @@
-﻿namespace SelfHostedYoloScreenCapture.Painting
+﻿namespace SelfHostedYoloScreenCapture.Drawing
 {
     internal class NullOperation : Operation
     {

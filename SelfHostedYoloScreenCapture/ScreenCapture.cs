@@ -4,7 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
     using Configuration;
-    using Painting;
+    using Drawing;
     using PhotoUploading;
     using SelectingRectangle;
 

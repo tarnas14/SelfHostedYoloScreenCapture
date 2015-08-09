@@ -3,7 +3,7 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using Painting;
+    using Drawing;
 
     public class SelectionDrawer : SelectionProviderThingie
     {

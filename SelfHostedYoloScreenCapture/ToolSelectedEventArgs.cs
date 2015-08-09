@@ -1,7 +1,7 @@
 ﻿namespace SelfHostedYoloScreenCapture
 {
     using System;
-    using Painting;
+    using Drawing;
 
     public class ToolSelectedEventArgs : EventArgs
     {

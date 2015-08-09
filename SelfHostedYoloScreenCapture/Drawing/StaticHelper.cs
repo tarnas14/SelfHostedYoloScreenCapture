@@ -1,7 +1,7 @@
-﻿namespace SelfHostedYoloScreenCapture.Painting
+﻿namespace SelfHostedYoloScreenCapture.Drawing
 {
-    using System.Drawing;
     using System;
+    using System.Drawing;
 
     class StaticHelper
     {

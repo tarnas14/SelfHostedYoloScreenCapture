@@ -1,4 +1,4 @@
-﻿namespace SelfHostedYoloScreenCapture.Painting
+﻿namespace SelfHostedYoloScreenCapture.Drawing
 {
     using System;
     using System.Drawing;
