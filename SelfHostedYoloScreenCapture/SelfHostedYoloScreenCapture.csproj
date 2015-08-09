@@ -77,16 +77,13 @@
     <Compile Include="Painting\NullOperation.cs" />
     <Compile Include="Painting\NullTool.cs" />
     <Compile Include="Painting\OnOffMouseEvents.cs" />
-    <Compile Include="Painting\ResponsibilityChainLink.cs" />
     <Compile Include="Painting\SelectionProviderThingie.cs" />
     <Compile Include="Painting\Tool.cs" />
-    <Compile Include="Painting\ToolDrawingInsideSelectionChainLink.cs" />
     <Compile Include="SelectingRectangle\ControlMouseEvents.cs" />
     <Compile Include="MouseEvents.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="OperationQueue.cs" />
     <Compile Include="Painting\DrawingMagic.cs" />
-    <Compile Include="Painting\RectangleMouseEvents.cs" />
     <Compile Include="Painting\StaticHelper.cs" />
     <Compile Include="PhotoUploading\FireAndForgetPhotoUploader.cs" />
     <Compile Include="PhotoUploading\PhotoUploader.cs" />
@@ -97,7 +94,8 @@
       <DependentUpon>PhotoUploaderPresentingResult.cs</DependentUpon>
     </Compile>
     <Compile Include="PhotoUploading\RequestFactory.cs" />
-    <Compile Include="SelectingRectangle\CanvasFromPictureBox.cs" />
+    <Compile Include="SelectingRectangle\PictureBoxBackgroundCanvas.cs" />
+    <Compile Include="SelectingRectangle\PictureBoxImageCanvas.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectingRectangle\RectangleSelectedEventArgs.cs" />

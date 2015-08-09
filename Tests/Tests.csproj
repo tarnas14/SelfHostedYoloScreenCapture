@@ -50,11 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MouseEventsTests\ChainOfResponsibilityTests.cs" />
-    <Compile Include="MouseEventsTests\ToolDrawingInsideSelectionChainLinkTests.cs" />
-    <Compile Include="MouseEventsTests\MouseEventsInsideRectangleTests.cs" />
-    <Compile Include="MouseEventsTests\MouseEventsMock.cs" />
-    <Compile Include="MouseEventsTests\MouseEventsTester.cs" />
     <Compile Include="OpertionQueueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

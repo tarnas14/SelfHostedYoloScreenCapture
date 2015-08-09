@@ -47,7 +47,7 @@
             Close();
         }
 
-        private void SetupCaptureCanvas(PictureBox canvas)
+        private void SetupCaptureCanvas(PictureBox canvasPictureBox)
         {
             var updatedRectangle = _captureRectangleFactory.GetRectangle();
 
@@ -59,22 +59,21 @@
             Location = updatedRectangle.Location;
             Size = updatedRectangle.Size;
 
-            canvas.Size = Size;
-            canvas.BackgroundImage = new Bitmap(canvas.Size.Width, canvas.Size.Height);
-            canvas.Image = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            canvasPictureBox.Size = Size;
+            canvasPictureBox.BackgroundImage = new Bitmap(canvasPictureBox.Size.Width, canvasPictureBox.Size.Height);
+            canvasPictureBox.Image = new Bitmap(canvasPictureBox.Size.Width, canvasPictureBox.Size.Height);
 
-            var pictureBoxCanvas = new CanvasFromPictureBox(canvas);
-            var pictureBoxMouseEvents = new ControlMouseEvents(canvas);
+            var pictureBoxMouseEvents = new ControlMouseEvents(canvasPictureBox);
             _onOffSelectionMouseEvents = new OnOffMouseEvents(pictureBoxMouseEvents)
             {
                 On = true
             };
-            _selectionDrawer = new SelectionDrawer(pictureBoxCanvas, _onOffSelectionMouseEvents);
-            _onOffDrawingMouseEvents = new OnOffMouseEvents(new RectangleMouseEvents(_selectionDrawer, pictureBoxMouseEvents))
+            _selectionDrawer = new SelectionDrawer(new PictureBoxImageCanvas(canvasPictureBox), _onOffSelectionMouseEvents);
+            _onOffDrawingMouseEvents = new OnOffMouseEvents(pictureBoxMouseEvents)
             {
                 On = false
             };
-            _drawingMagic = new DrawingMagic(pictureBoxCanvas, _onOffDrawingMouseEvents, new OperationQueue());
+            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(canvasPictureBox), _onOffDrawingMouseEvents, new OperationQueue());
             _selectionDrawer.RectangleSelected += (sender, args) => _drawingMagic.UpdateCache(sender, args);
             _drawingMagic.OperationFinished += (sender, args) => { 
                 _onOffSelectionMouseEvents.On = true;

@@ -6,6 +6,5 @@
     public interface SelectionProviderThingie
     {
         event EventHandler<RectangleSelectedEventArgs> RectangleSelected;
-        event EventHandler NewSelectionStarted;
     }
 }

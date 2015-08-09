@@ -3,11 +3,11 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    class CanvasFromPictureBox : SelectionCanvas
+    class PictureBoxImageCanvas : SelectionCanvas
     {
         private readonly PictureBox _pictureBox;
 
-        public CanvasFromPictureBox(PictureBox pictureBox)
+        public PictureBoxImageCanvas(PictureBox pictureBox)
         {
             _pictureBox = pictureBox;
         }
