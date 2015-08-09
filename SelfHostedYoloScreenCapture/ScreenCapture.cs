@@ -73,7 +73,7 @@
             {
                 On = false
             };
-            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(canvasPictureBox), _onOffDrawingMouseEvents, new OperationQueue());
+            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(canvasPictureBox), _onOffDrawingMouseEvents);
             _selectionDrawer.RectangleSelected += (sender, args) => _drawingMagic.UpdateCache(sender, args);
             _drawingMagic.OperationFinished += (sender, args) => { 
                 _onOffSelectionMouseEvents.On = true;
@@ -89,7 +89,6 @@
             _actionBox.ToolSelected += (sender, toolSelectedEventArgs) =>
             {
                 _onOffSelectionMouseEvents.On = false;
-                _drawingMagic.SetTool(toolSelectedEventArgs.Tool);
                 _onOffDrawingMouseEvents.On = true;
             };
         }
