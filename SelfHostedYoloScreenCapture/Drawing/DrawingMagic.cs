@@ -46,7 +46,8 @@
             using (var pen = new Pen(new SolidBrush(Color.Red)))
             using (var canvasGraphics = Graphics.FromImage(_canvas.Canvas))
             {
-                canvasGraphics.DrawImage(_cache, new Rectangle(Point.Empty, _canvas.Canvas.Size));
+                var destRect = StaticHelper.Inflate(StaticHelper.Contain(workspaceRectangle, _lastWorkspace), 1);
+                canvasGraphics.DrawImage(_cache, destRect, destRect, GraphicsUnit.Pixel);
                 canvasGraphics.DrawLine(pen, _start, lineEnd);
                 _canvas.Invalidate();
             }
