@@ -41,6 +41,7 @@
             }
 
             var lineEnd = e.Location;
+            var currentWorkspace = StaticHelper.GetRectangle(_start, lineEnd);
 
             using (var pen = new Pen(new SolidBrush(Color.Red)))
             using (var canvasGraphics = Graphics.FromImage(_canvas.Canvas))
@@ -48,10 +49,10 @@
                 var destRect = StaticHelper.Inflate(_lastWorkspace, 1);
                 canvasGraphics.DrawImage(_cache, destRect, destRect, GraphicsUnit.Pixel);
                 canvasGraphics.DrawLine(pen, _start, lineEnd);
-                _canvas.Invalidate();
+                _canvas.Invalidate(StaticHelper.Inflate(StaticHelper.Contain(_lastWorkspace, currentWorkspace), 1));
             }
 
-            _lastWorkspace = StaticHelper.GetRectangle(_start, lineEnd); ;
+            _lastWorkspace = currentWorkspace;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
