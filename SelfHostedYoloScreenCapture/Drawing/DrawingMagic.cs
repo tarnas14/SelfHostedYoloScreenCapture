@@ -41,18 +41,17 @@
             }
 
             var lineEnd = e.Location;
-            var workspaceRectangle = StaticHelper.GetRectangle(_start, lineEnd);
 
             using (var pen = new Pen(new SolidBrush(Color.Red)))
             using (var canvasGraphics = Graphics.FromImage(_canvas.Canvas))
             {
-                var destRect = StaticHelper.Inflate(StaticHelper.Contain(workspaceRectangle, _lastWorkspace), 1);
+                var destRect = StaticHelper.Inflate(_lastWorkspace, 1);
                 canvasGraphics.DrawImage(_cache, destRect, destRect, GraphicsUnit.Pixel);
                 canvasGraphics.DrawLine(pen, _start, lineEnd);
                 _canvas.Invalidate();
             }
 
-            _lastWorkspace = workspaceRectangle;
+            _lastWorkspace = StaticHelper.GetRectangle(_start, lineEnd); ;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
