@@ -32,8 +32,7 @@
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.Manual;
 
-            SetupCaptureCanvas(_canvas);
-            ScreenToCanvas(_canvas);
+            SetupCaptureCanvas();
             SetupActionBox();
         }
 
@@ -47,7 +46,7 @@
             Close();
         }
 
-        private void SetupCaptureCanvas(PictureBox canvasPictureBox)
+        private void SetupCaptureCanvas()
         {
             var updatedRectangle = _captureRectangleFactory.GetRectangle();
 
@@ -59,26 +58,37 @@
             Location = updatedRectangle.Location;
             Size = updatedRectangle.Size;
 
-            canvasPictureBox.Size = Size;
-            canvasPictureBox.BackgroundImage = new Bitmap(canvasPictureBox.Size.Width, canvasPictureBox.Size.Height);
-            canvasPictureBox.Image = new Bitmap(canvasPictureBox.Size.Width, canvasPictureBox.Size.Height);
+            _backgroundPictureBox.Size = Size;
+            _backgroundPictureBox.Image = new Bitmap(_backgroundPictureBox.Size.Width, _backgroundPictureBox.Size.Height);
 
-            var pictureBoxMouseEvents = new ControlMouseEvents(canvasPictureBox);
+            _canvas.Size = Size;
+            _canvas.BackgroundImage = new Bitmap(_canvas.Size.Width, _canvas.Size.Height);
+            _canvas.Image = new Bitmap(_canvas.Size.Width, _canvas.Size.Height);
+            _canvas.Parent = _backgroundPictureBox;
+            _canvas.BackColor = Color.Transparent;
+
+            var pictureBoxMouseEvents = new ControlMouseEvents(_canvas);
             _onOffSelectionMouseEvents = new OnOffMouseEvents(pictureBoxMouseEvents)
             {
                 On = true
             };
-            _selectionDrawer = new SelectionDrawer(new PictureBoxImageCanvas(canvasPictureBox), _onOffSelectionMouseEvents);
+            _selectionDrawer = new SelectionDrawer(new PictureBoxImageCanvas(_canvas), _onOffSelectionMouseEvents);
             _onOffDrawingMouseEvents = new OnOffMouseEvents(pictureBoxMouseEvents)
             {
                 On = false
             };
-            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(canvasPictureBox), _onOffDrawingMouseEvents);
+            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(_canvas), _onOffDrawingMouseEvents);
             _selectionDrawer.RectangleSelected += (sender, args) => _drawingMagic.UpdateCache(sender, args);
-            _drawingMagic.OperationFinished += (sender, args) => { 
+            _drawingMagic.OperationFinished += (sender, args) =>
+            {
                 _onOffSelectionMouseEvents.On = true;
                 _onOffDrawingMouseEvents.On = false;
             };
+
+            using (var graphics = Graphics.FromImage(_backgroundPictureBox.Image))
+            {
+                graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, _backgroundPictureBox.Size);
+            }
         }
 
         private void SetupActionBox()
@@ -96,15 +106,7 @@
         private void UploadSelection(object sender, EventArgs e)
         {
             Hide();
-            _photoUploader.Upload(CaptureSelection(_canvas, _selectionDrawer.Selection));
-        }
-
-        private void ScreenToCanvas(PictureBox canvas)
-        {
-            using (var graphics = Graphics.FromImage(canvas.BackgroundImage))
-            {
-                graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, canvas.Size);
-            }
+            _photoUploader.Upload(CaptureSelection(_selectionDrawer.Selection));
         }
         
         private void SetupHotkeys()
@@ -132,18 +134,19 @@
                 return;
             }
 
-            Clipboard.SetImage(CaptureSelection(_canvas, _selectionDrawer.Selection));
+            Clipboard.SetImage(CaptureSelection(_selectionDrawer.Selection));
             Hide();
         }
 
-        private Image CaptureSelection(PictureBox canvas, Rectangle selection)
+        private Image CaptureSelection(Rectangle selection)
         {
             var pictureToClipboard = new Bitmap(selection.Width, selection.Height);
             var pictureRectangle = new RectangleF(new PointF(0, 0),
                 new SizeF(pictureToClipboard.Width, pictureToClipboard.Height));
             using (var graphics = Graphics.FromImage(pictureToClipboard))
             {
-                graphics.DrawImage(canvas.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
+                graphics.DrawImage(_backgroundPictureBox.Image, pictureRectangle, selection, GraphicsUnit.Pixel);
+                graphics.DrawImage(_canvas.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
             }
 
             return pictureToClipboard;
@@ -151,8 +154,7 @@
 
         public void StartNewScreenCapture(object sender, EventArgs e)
         {
-            SetupCaptureCanvas(_canvas);
-            ScreenToCanvas(_canvas);
+            SetupCaptureCanvas();
             _selectionDrawer.ResetSelection();
             _actionBox.Hide();
             Show();

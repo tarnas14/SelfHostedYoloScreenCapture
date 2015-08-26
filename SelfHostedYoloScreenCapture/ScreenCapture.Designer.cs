@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this._canvas = new System.Windows.Forms.PictureBox();
+            this._backgroundPictureBox = new System.Windows.Forms.PictureBox();
             this._actionBox = new SelfHostedYoloScreenCapture.ActionBox();
             ((System.ComponentModel.ISupportInitialize)(this._canvas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._backgroundPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // _canvas
@@ -45,10 +47,20 @@
             this._canvas.TabIndex = 0;
             this._canvas.TabStop = false;
             // 
+            // _backgroundPictureBox
+            // 
+            this._backgroundPictureBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this._backgroundPictureBox.Location = new System.Drawing.Point(0, 0);
+            this._backgroundPictureBox.Name = "_backgroundPictureBox";
+            this._backgroundPictureBox.Size = new System.Drawing.Size(283, 261);
+            this._backgroundPictureBox.TabIndex = 2;
+            this._backgroundPictureBox.TabStop = false;
+            // 
             // _actionBox
             // 
             this._actionBox.Location = new System.Drawing.Point(12, 12);
             this._actionBox.Name = "_actionBox";
+            this._actionBox.Size = new System.Drawing.Size(65, 22);
             this._actionBox.TabIndex = 1;
             this._actionBox.Visible = false;
             // 
@@ -60,10 +72,12 @@
             this.ControlBox = false;
             this.Controls.Add(this._actionBox);
             this.Controls.Add(this._canvas);
+            this.Controls.Add(this._backgroundPictureBox);
             this.Name = "ScreenCapture";
             this.ShowInTaskbar = false;
             this.Text = "ScreenCapture";
             ((System.ComponentModel.ISupportInitialize)(this._canvas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._backgroundPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -72,5 +86,6 @@
 
         private System.Windows.Forms.PictureBox _canvas;
         private ActionBox _actionBox;
+        private System.Windows.Forms.PictureBox _backgroundPictureBox;
     }
 }
