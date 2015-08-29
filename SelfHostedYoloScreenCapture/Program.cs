@@ -1,7 +1,6 @@
 ﻿namespace SelfHostedYoloScreenCapture
 {
     using System;
-    using System.Drawing;
     using System.Windows.Forms;
     using Configuration;
     using ManagedWinapi;
@@ -62,16 +61,6 @@
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-        }
-
-        private Rectangle ConfigureCaptureRectangle(ScreenCaptureConfiguration screenCaptureConfiguration)
-        {
-            if (screenCaptureConfiguration.Fullscreen)
-            {
-                return SystemInformation.VirtualScreen;
-            }
-
-            return screenCaptureConfiguration.CustomCaptureRectangle;
         }
     }
 }

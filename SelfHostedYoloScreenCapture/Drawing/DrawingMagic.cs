@@ -57,11 +57,6 @@
             _lastWorkspace = currentWorkspace;
         }
 
-        private void Clear(Graphics canvasGraphics, Rectangle rectangle)
-        {
-            canvasGraphics.FillRectangle(new SolidBrush(Color.Transparent), rectangle);
-        }
-
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (!_workingMagic)
@@ -90,6 +85,11 @@
             {
                 OperationFinished(this, EventArgs.Empty);
             }
+        }
+
+        private void Clear(Graphics canvasGraphics, Rectangle rectangle)
+        {
+            canvasGraphics.FillRectangle(new SolidBrush(Color.Transparent), rectangle);
         }
     }
 }

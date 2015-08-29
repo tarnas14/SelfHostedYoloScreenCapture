@@ -50,11 +50,24 @@
         {
             var updatedRectangle = _captureRectangleFactory.GetRectangle();
 
-            if (updatedRectangle.Location == Location && updatedRectangle.Size == Size)
+            if (updatedRectangle.Location != Location || updatedRectangle.Size != Size)
             {
-                return;
+                InitialiseEverythingFromScratch(updatedRectangle);
+            }
+            else
+            {
+                _backgroundPictureBox.Image = new Bitmap(_backgroundPictureBox.Size.Width, _backgroundPictureBox.Size.Height);
+                _canvas.BackgroundImage = new Bitmap(_canvas.Size.Width, _canvas.Size.Height);
             }
 
+            using (var graphics = Graphics.FromImage(_backgroundPictureBox.BackgroundImage))
+            {
+                graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, _backgroundPictureBox.Size);
+            }
+        }
+
+        private void InitialiseEverythingFromScratch(Rectangle updatedRectangle)
+        {
             Location = updatedRectangle.Location;
             Size = updatedRectangle.Size;
 
@@ -78,17 +91,13 @@
             {
                 On = false
             };
-            _drawingMagic = new DrawingMagic(new PictureBoxImageCanvas(_backgroundPictureBox),  new PictureBoxBackgroundCanvas(_canvas), _onOffDrawingMouseEvents);
+            _drawingMagic = new DrawingMagic(new PictureBoxImageCanvas(_backgroundPictureBox),
+                new PictureBoxBackgroundCanvas(_canvas), _onOffDrawingMouseEvents);
             _drawingMagic.OperationFinished += (sender, args) =>
             {
                 _onOffSelectionMouseEvents.On = true;
                 _onOffDrawingMouseEvents.On = false;
             };
-
-            using (var graphics = Graphics.FromImage(_backgroundPictureBox.BackgroundImage))
-            {
-                graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, _backgroundPictureBox.Size);
-            }
         }
 
         private void SetupActionBox()
