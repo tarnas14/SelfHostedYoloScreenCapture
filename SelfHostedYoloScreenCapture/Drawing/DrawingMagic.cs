@@ -7,16 +7,17 @@
 
     class DrawingMagic
     {
-        private readonly SelectionCanvas _canvas;
-        private Image _cache;
+        private readonly SelectionCanvas _background;
+        private readonly SelectionCanvas _foreground;
         private bool _workingMagic;
         private Point _start;
         private Rectangle _lastWorkspace;
         public event EventHandler OperationFinished;
 
-        public DrawingMagic(SelectionCanvas canvas, MouseEvents mouseEvents)
+        public DrawingMagic(SelectionCanvas background, SelectionCanvas foreground, MouseEvents mouseEvents)
         {
-            _canvas = canvas;
+            _background = background;
+            _foreground = foreground;
             mouseEvents.MouseDown += OnMouseDown;
             mouseEvents.MouseMove += OnMouseMove;
             mouseEvents.MouseUp += OnMouseUp;
@@ -44,15 +45,21 @@
             var currentWorkspace = StaticHelper.GetRectangle(_start, lineEnd);
 
             using (var pen = new Pen(new SolidBrush(Color.Red)))
-            using (var canvasGraphics = Graphics.FromImage(_canvas.Canvas))
+            using (var canvasGraphics = Graphics.FromImage(_foreground.Canvas))
             {
-                var destRect = StaticHelper.Inflate(_lastWorkspace, 1);
-                canvasGraphics.DrawImage(_cache, destRect, destRect, GraphicsUnit.Pixel);
+                canvasGraphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                var lastWorkspaceRect = StaticHelper.Inflate(_lastWorkspace, 1);
+                Clear(canvasGraphics, lastWorkspaceRect);
                 canvasGraphics.DrawLine(pen, _start, lineEnd);
-                _canvas.Invalidate(StaticHelper.Inflate(StaticHelper.Contain(_lastWorkspace, currentWorkspace), 1));
             }
 
+            _foreground.Invalidate(StaticHelper.Inflate(StaticHelper.Contain(_lastWorkspace, currentWorkspace), 1));
             _lastWorkspace = currentWorkspace;
+        }
+
+        private void Clear(Graphics canvasGraphics, Rectangle rectangle)
+        {
+            canvasGraphics.FillRectangle(new SolidBrush(Color.Transparent), rectangle);
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -63,16 +70,18 @@
             }
 
             var lineEnd = e.Location;
+            var currentWorkspace = StaticHelper.GetRectangle(_start, lineEnd);
 
             using (var pen = new Pen(new SolidBrush(Color.Red)))
-            using (var cacheGraphics = Graphics.FromImage(_cache))
+            using (var backgroundGraphics = Graphics.FromImage(_background.Canvas))
+            using (var foregroundGraphics = Graphics.FromImage(_foreground.Canvas))
             {
-                cacheGraphics.DrawImage(_cache, new Rectangle(Point.Empty, _cache.Size));
-                cacheGraphics.DrawLine(pen, _start, lineEnd);
-                _canvas.Invalidate();
+                Clear(foregroundGraphics, _lastWorkspace);
+                backgroundGraphics.DrawLine(pen, _start, lineEnd);
             }
 
-            CommitCache();
+            _foreground.Invalidate(_lastWorkspace);
+            _background.Invalidate(StaticHelper.Inflate(currentWorkspace, 1));
 
             _lastWorkspace = new Rectangle();
             _workingMagic = false;
@@ -80,27 +89,6 @@
             if (OperationFinished != null)
             {
                 OperationFinished(this, EventArgs.Empty);
-            }
-        }
-
-        private void CommitCache()
-        {
-            using (var g = Graphics.FromImage(_canvas.Canvas))
-            {
-                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                g.FillRectangle(new SolidBrush(Color.Transparent), new Rectangle(new Point(0,0), _canvas.Canvas.Size));
-                g.DrawImage(_cache, new Point(0,0));
-                _canvas.Invalidate();
-            }
-        }
-
-        public void UpdateCache(object sender, RectangleSelectedEventArgs rectangleSelectedArgs)
-        {
-            _cache = new Bitmap(_canvas.Canvas.Width, _canvas.Canvas.Height);
-            using (var g = Graphics.FromImage(_cache))
-            {
-                var canvasRectangle = new Rectangle(new Point(0,0), _canvas.Canvas.Size);
-                g.DrawImage(_canvas.Canvas, canvasRectangle, canvasRectangle, GraphicsUnit.Pixel);
             }
         }
     }

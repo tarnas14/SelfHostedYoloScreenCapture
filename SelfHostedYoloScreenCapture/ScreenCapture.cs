@@ -59,6 +59,7 @@
             Size = updatedRectangle.Size;
 
             _backgroundPictureBox.Size = Size;
+            _backgroundPictureBox.BackgroundImage = new Bitmap(_backgroundPictureBox.Size.Width, _backgroundPictureBox.Size.Height);
             _backgroundPictureBox.Image = new Bitmap(_backgroundPictureBox.Size.Width, _backgroundPictureBox.Size.Height);
 
             _canvas.Size = Size;
@@ -77,15 +78,14 @@
             {
                 On = false
             };
-            _drawingMagic = new DrawingMagic(new PictureBoxBackgroundCanvas(_canvas), _onOffDrawingMouseEvents);
-            _selectionDrawer.RectangleSelected += (sender, args) => _drawingMagic.UpdateCache(sender, args);
+            _drawingMagic = new DrawingMagic(new PictureBoxImageCanvas(_backgroundPictureBox),  new PictureBoxBackgroundCanvas(_canvas), _onOffDrawingMouseEvents);
             _drawingMagic.OperationFinished += (sender, args) =>
             {
                 _onOffSelectionMouseEvents.On = true;
                 _onOffDrawingMouseEvents.On = false;
             };
 
-            using (var graphics = Graphics.FromImage(_backgroundPictureBox.Image))
+            using (var graphics = Graphics.FromImage(_backgroundPictureBox.BackgroundImage))
             {
                 graphics.CopyFromScreen(Location.X, Location.Y, 0, 0, _backgroundPictureBox.Size);
             }
@@ -98,7 +98,7 @@
             _actionBox.Upload += UploadSelection;
             _actionBox.ToolSelected += (sender, toolSelectedEventArgs) =>
             {
-                _onOffSelectionMouseEvents.On = false;
+                _onOffSelectionMouseEvents.On = false; 
                 _onOffDrawingMouseEvents.On = true;
             };
         }
@@ -145,8 +145,8 @@
                 new SizeF(pictureToClipboard.Width, pictureToClipboard.Height));
             using (var graphics = Graphics.FromImage(pictureToClipboard))
             {
+                graphics.DrawImage(_backgroundPictureBox.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
                 graphics.DrawImage(_backgroundPictureBox.Image, pictureRectangle, selection, GraphicsUnit.Pixel);
-                graphics.DrawImage(_canvas.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
             }
 
             return pictureToClipboard;
