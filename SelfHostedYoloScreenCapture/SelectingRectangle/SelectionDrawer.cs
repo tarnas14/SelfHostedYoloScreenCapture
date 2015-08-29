@@ -62,8 +62,8 @@
                 Clear(Selection);
                 Select(newSelection);
 
-                _selectionCanvas.Invalidate(GetContainingRectangle(Selection, newSelection));
-                Selection = newSelection;
+                _selectionCanvas.Invalidate(StaticHelper.Contain(Selection, newSelection));
+                Selection = RestrictToCanvas(newSelection, _selectionCanvas.Canvas.Size);
             }
         }
 
@@ -87,17 +87,6 @@
             }
         }
 
-        private Rectangle GetContainingRectangle(Rectangle rectangle1, Rectangle rectangle2)
-        {
-            var startX = Math.Min(rectangle1.X, rectangle2.X);
-            var startY = Math.Min(rectangle1.Y, rectangle2.Y);
-
-            var endX = Math.Max(rectangle1.Right, rectangle2.Right);
-            var endY = Math.Max(rectangle1.Bottom, rectangle2.Bottom);
-
-            return new Rectangle(new Point(startX, startY), new Size(endX - startX, endY - startY));
-        }
-
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             _selecting = false;
@@ -109,6 +98,17 @@
                     CanvasSize = _selectionCanvas.Canvas.Size
                 });
             }
+        }
+
+        private Rectangle RestrictToCanvas(Rectangle selection, Size size)
+        {
+            var x = selection.X < 0 ? 0 : selection.X;
+            var y = selection.Y < 0 ? 0 : selection.Y;
+
+            var bottom = selection.Bottom < size.Height ? selection.Bottom : size.Height;
+            var right = selection.Right < size.Width ? selection.Right : size.Width;
+
+            return new Rectangle(new Point(x, y), new Size(right - x, bottom - y));
         }
 
         public void ResetSelection()

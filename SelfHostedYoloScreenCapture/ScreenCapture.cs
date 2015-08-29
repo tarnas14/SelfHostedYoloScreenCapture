@@ -150,8 +150,7 @@
         private Image CaptureSelection(Rectangle selection)
         {
             var pictureToClipboard = new Bitmap(selection.Width, selection.Height);
-            var pictureRectangle = new RectangleF(new PointF(0, 0),
-                new SizeF(pictureToClipboard.Width, pictureToClipboard.Height));
+            var pictureRectangle = new RectangleF(new PointF(0, 0), new SizeF(pictureToClipboard.Width, pictureToClipboard.Height));
             using (var graphics = Graphics.FromImage(pictureToClipboard))
             {
                 graphics.DrawImage(_backgroundPictureBox.BackgroundImage, pictureRectangle, selection, GraphicsUnit.Pixel);
