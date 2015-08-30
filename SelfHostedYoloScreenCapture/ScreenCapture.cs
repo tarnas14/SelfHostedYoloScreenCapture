@@ -110,6 +110,7 @@
                 _onOffSelectionMouseEvents.On = false; 
                 _onOffDrawingMouseEvents.On = true;
             };
+            _actionBox.ToolSelected += _drawingMagic.UseTool;
         }
 
         private void UploadSelection(object sender, EventArgs e)

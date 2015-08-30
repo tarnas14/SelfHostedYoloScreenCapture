@@ -1,17 +1,16 @@
 ﻿namespace SelfHostedYoloScreenCapture.Drawing
 {
     using System;
-    using System.Drawing;
     using System.Windows.Forms;
     using SelectingRectangle;
+    using Tools;
 
     class DrawingMagic
     {
         private readonly SelectionCanvas _background;
         private readonly SelectionCanvas _foreground;
-        private bool _workingMagic;
-        private Point _start;
-        private Rectangle _lastWorkspace;
+        private Tool _tool;
+
         public event EventHandler OperationFinished;
 
         public DrawingMagic(SelectionCanvas background, SelectionCanvas foreground, MouseEvents mouseEvents)
@@ -21,75 +20,34 @@
             mouseEvents.MouseDown += OnMouseDown;
             mouseEvents.MouseMove += OnMouseMove;
             mouseEvents.MouseUp += OnMouseUp;
+
+            _tool = new NullTool();
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            if (_workingMagic)
-            {
-                return;
-            }
-
-            _workingMagic = true;
-            _start = e.Location;
+            _tool.MouseDown(e);
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_workingMagic)
-            {
-                return;
-            }
-
-            var lineEnd = e.Location;
-            var currentWorkspace = StaticHelper.GetRectangle(_start, lineEnd);
-
-            using (var pen = new Pen(new SolidBrush(Color.Red)))
-            using (var canvasGraphics = Graphics.FromImage(_foreground.Canvas))
-            {
-                canvasGraphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                var lastWorkspaceRect = StaticHelper.Inflate(_lastWorkspace, 1);
-                Clear(canvasGraphics, lastWorkspaceRect);
-                canvasGraphics.DrawLine(pen, _start, lineEnd);
-            }
-
-            _foreground.Invalidate(StaticHelper.Inflate(StaticHelper.Contain(_lastWorkspace, currentWorkspace), 1));
-            _lastWorkspace = currentWorkspace;
+            _tool.MouseMove(e, _foreground);
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
-            if (!_workingMagic)
-            {
-                return;
-            }
-
-            var lineEnd = e.Location;
-            var currentWorkspace = StaticHelper.GetRectangle(_start, lineEnd);
-
-            using (var pen = new Pen(new SolidBrush(Color.Red)))
-            using (var backgroundGraphics = Graphics.FromImage(_background.Canvas))
-            using (var foregroundGraphics = Graphics.FromImage(_foreground.Canvas))
-            {
-                Clear(foregroundGraphics, _lastWorkspace);
-                backgroundGraphics.DrawLine(pen, _start, lineEnd);
-            }
-
-            _foreground.Invalidate(_lastWorkspace);
-            _background.Invalidate(StaticHelper.Inflate(currentWorkspace, 1));
-
-            _lastWorkspace = new Rectangle();
-            _workingMagic = false;
+            _tool.MouseUp(e, _foreground, _background);
 
             if (OperationFinished != null)
             {
                 OperationFinished(this, EventArgs.Empty);
             }
+            _tool = new NullTool();
         }
 
-        private void Clear(Graphics canvasGraphics, Rectangle rectangle)
+        public void UseTool(object sender, ToolSelectedEventArgs e)
         {
-            canvasGraphics.FillRectangle(new SolidBrush(Color.Transparent), rectangle);
+            _tool = e.Tool;
         }
     }
 }

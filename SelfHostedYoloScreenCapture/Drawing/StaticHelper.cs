@@ -29,5 +29,10 @@
         {
             return new Rectangle(new Point(rectangle.Left - margin, rectangle.Top - margin), new Size(rectangle.Width + 2*margin, rectangle.Height + 2*margin));            
         }
+
+        public static void Clear(Graphics canvasGraphics, Rectangle rectangle)
+        {
+            canvasGraphics.FillRectangle(new SolidBrush(Color.Transparent), rectangle);
+        }
     }
 }

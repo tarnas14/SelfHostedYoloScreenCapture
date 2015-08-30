@@ -4,13 +4,14 @@ namespace SelfHostedYoloScreenCapture
 {
     using System;
     using System.Drawing;
+    using Drawing.Tools;
     using SelectingRectangle;
 
     public partial class ActionBox : UserControl
     {
         public event EventHandler Upload;
         public event KeyEventHandler KeyDownBubble;
-        public event EventHandler ToolSelected;
+        public event EventHandler<ToolSelectedEventArgs> ToolSelected;
 
         public ActionBox()
         {
@@ -35,7 +36,7 @@ namespace SelfHostedYoloScreenCapture
             {
                 if (ToolSelected != null)
                 {
-                    ToolSelected(this,  EventArgs.Empty);
+                    ToolSelected(this,  new ToolSelectedEventArgs{ Tool = new DrawLine() });
                 }
             };
             BubbleKeyDown(_testButton);
